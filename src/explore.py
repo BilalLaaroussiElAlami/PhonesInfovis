@@ -4,7 +4,7 @@ from bokeh.layouts import column, row
 from bokeh.models import ColumnDataSource, HoverTool, Select, MultiSelect
 from bokeh.plotting import figure
 
-from project.compare import multi_select_models, multi_select_attributes
+from compare import multi_select_models, multi_select_attributes
 
 # maka a dataframe from the csv file
 df = pd.read_csv('smartphones.csv')
@@ -84,24 +84,5 @@ for control in controls:
     control.on_change('value', lambda attr, old, new: updateFigure2D())
 
 
-# Allow user to select multiple models they wish to compare
-#optionsModels = df['model'].unique().tolist()
-#multi_select_models = MultiSelect(title="select model(s)::", value=["Option 1"], options=optionsModels, height= 200)
 
-#def multi_select_callback(attr, old, new):
-#    selected_models = multi_select_models.value
-#    selected_attributes = multi_select_attributes.value
-#    print("Selected models:", selected_models)
-#    print("Selected attributes:", selected_attributes)
-
-#multi_select_models.on_change('value', multi_select_callback)
-
-# Allow user to select multiple attributes to be compared
-#optionsAttributes = df.columns.tolist()
-#multi_select_attributes = MultiSelect(title="Select attributes:", value=["Option 1"], options=optionsAttributes, height= 200)
-#multi_select_attributes.on_change('value', multi_select_callback)
-#multi_select_attributes.on_change('value', multi_select_callback)
-
-layout =  row(column(column(x_axis_choose, y_axis_choose), Figure2D), multi_select_models, multi_select_attributes)
-curdoc().add_root(layout)
 
