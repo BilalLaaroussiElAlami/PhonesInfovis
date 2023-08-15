@@ -1,15 +1,37 @@
-from bokeh.plotting import figure, show
+from bokeh.plotting import figure, curdoc
+from bokeh.models import ColumnDataSource
+from bokeh.layouts import column
+from random import randint
 
-fruits = ['Apples', 'Pears', 'Nectarines', 'Plums', 'Grapes', 'Strawberries']
-counts = [5, 3, 4, 2, 4, 6]
-counts2 = [5, 3, 4, 2, 4, 6]
+# Create initial data
+data = {'categories': ['A', 'B', 'C', 'D', 'E'],
+        'values': [randint(1, 10) for _ in range(5)]}
 
-p = figure(x_range=fruits, height=350, title="Fruit Counts",
-           toolbar_location=None, tools="")
+# Create a ColumnDataSource
+source = ColumnDataSource(data=data)
 
-p.vbar(x=fruits, top=counts, width=0.9)
+# Create a figure
+p = figure(x_range=data['categories'], height=350, title="Updatable Bar Chart")
+bars = p.vbar(x='categories', top='values', source=source, width=0.5)
 
-p.xgrid.grid_line_color = None
-p.y_range.start = 0
+# Update function to change the data
+def update():
+    new_data = {'categories': data['categories'] + ['F'],
+                'values': [randint(1, 10) for _ in range(5)]}
+    source.data = new_data
 
-show(p)
+# Add a button to update the chart
+from bokeh.models import Button
+button = Button(label="Update Data", button_type="success")
+button.on_click(update)
+
+# Add a button to add a new bar
+add_button = Button(label="Add Bar 'F'", button_type="primary")
+add_button.on_click(update)
+
+
+# Add the plot and button to the layout
+layout = column(p, button, add_button)
+
+# Add the layout to the current document
+curdoc().add_root(layout)
