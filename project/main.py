@@ -1,7 +1,7 @@
 import pandas as pd
 from bokeh.io import show, curdoc
 from bokeh.layouts import column, row
-from bokeh.models import ColumnDataSource, HoverTool, Select
+from bokeh.models import ColumnDataSource, HoverTool, Select, MultiSelect
 from bokeh.plotting import figure
 
 
@@ -11,15 +11,6 @@ df = pd.read_csv('smartphones.csv')
 # print the brands of the phones
 #print(df['brand_name'].unique())
 
-"""
-axis_map = {
-    "Tomato Meter": "Meter",
-    "Numeric Rating": "numericRating",
-    "Number of Reviews": "Reviews",
-    "Box Office (dollars)": "BoxOffice",
-    "Length (minutes)": "Runtime",
-    "Year": "Year",
-}"""
 
 attribute_map = {
     "Brand": "brand_name",
@@ -47,50 +38,71 @@ attribute_map = {
 }
 
 
-x_axis = Select(title="X Axis", options=sorted(attribute_map.keys()), value="Battery Capacity")
-y_axis = Select(title="Y Axis", options=sorted(attribute_map.keys()), value="Price")
+x_axis_choose = Select(title="X Axis", options=sorted(attribute_map.keys()), value="Battery Capacity")
+y_axis_choose = Select(title="Y Axis", options=sorted(attribute_map.keys()), value="Price")
 
 # make a graph where the x-axis is the battery_capacity and the y-axis is the price, plot the phone models as circles, when the user hovers over a circle
 # more information is shown about the phone model:
 
 # Create a ColumnDataSource for the data
-source = ColumnDataSource(data=dict(
+sourceFigure2D = ColumnDataSource(data=dict(
     x=df['battery_capacity'],
     y=df['price'],
-    model=df['model']
+    model=df['model'],
+    brand = df['brand_name']
 ))
 
 # Create the figure
-p = figure(title="Battery capacity vs price", x_axis_label="Battery capacity", y_axis_label="Price")
+Figure2D = figure(title="Battery capacity vs price", x_axis_label="Battery capacity", y_axis_label="Price")
 
 # Add circles with data from the ColumnDataSource
-circle = p.circle(x='x', y='y', size=10, source=source, color = 'blue', line_color = 'black')
+circle = Figure2D.circle(x='x', y='y', size=10, source=sourceFigure2D, color ='blue', line_color ='black')
 
 # Customize the HoverTool to display the model information
 hover = HoverTool()
 hover.tooltips = [("Model", "@model")]
-p.add_tools(hover)
+Figure2D.add_tools(hover)
 
 
-def update():
+def updateFigure2D():
     print("updated")
 
-    x_name = attribute_map[x_axis.value]
-    y_name = attribute_map[y_axis.value]
+    x_name = attribute_map[x_axis_choose.value]
+    y_name = attribute_map[y_axis_choose.value]
 
-    p.xaxis.axis_label = x_axis.value
-    p.yaxis.axis_label = y_axis.value
-    p.title.text = f"{len(df)} movies selected"
-    source.data = dict(
+    Figure2D.xaxis.axis_label = x_axis_choose.value
+    Figure2D.yaxis.axis_label = y_axis_choose.value
+    Figure2D.title.text = f"{len(df)} movies selected"
+    sourceFigure2D.data = dict(
         x=df[x_name],
         y=df[y_name],
-        model=df['model']
+        brand=df['brand_name']
     )
 
-controls = [ x_axis, y_axis]
+controls = [x_axis_choose, y_axis_choose]
 for control in controls:
-    control.on_change('value', lambda attr, old, new: update())
+    control.on_change('value', lambda attr, old, new: updateFigure2D())
 
-layout =  row(column(x_axis,y_axis),p)
-#show(layout)
+
+
+# Allow user to select multiple models they wish to compare
+optionsModels = df['model'].unique().tolist()
+multi_select_models = MultiSelect(title="select model(s)::", value=["Option 1"], options=optionsModels, height= 200)
+
+def multi_select_callback(attr, old, new):
+    selected_models = multi_select_models.value
+    selected_attributes = multi_select_attributes.value
+    print("Selected models:", selected_models)
+    print("Selected attributes:", selected_attributes)
+
+multi_select_models.on_change('value', multi_select_callback)
+
+# Allow user to select multiple attributes to be compared
+optionsAttributes = df.columns.tolist()
+multi_select_attributes = MultiSelect(title="Select attributes:", value=["Option 1"], options=optionsAttributes, height= 200)
+multi_select_attributes.on_change('value', multi_select_callback)
+multi_select_attributes.on_change('value', multi_select_callback)
+
+layout =  row(column(column(x_axis_choose, y_axis_choose), Figure2D), multi_select_models, multi_select_attributes)
 curdoc().add_root(layout)
+
