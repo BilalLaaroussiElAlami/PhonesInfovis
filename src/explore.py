@@ -48,23 +48,91 @@ choose_fast_charging = RadioGroup(labels=["No", "Yes", "Any"], active=2)
 
 
 
+ratingThreshold = 8.0
+#make 2 dataframes the first dataframe for all rows where the rating is less than 8 and another where the rating is greater than 8
+smartPhonesDFRatingBiggerThan8 = smartPhonesDF[smartPhonesDF['avg_rating'] >= ratingThreshold]
+smartPhonesDFRatingLesserThan8 = smartPhonesDF[smartPhonesDF['avg_rating'] < ratingThreshold]
 
-# Define the colors for each brand
-brand_colors = {'samsung': 'cyan', 'apple': 'orange', 'huawei': 'green', 'oppo': 'purple', 'xiaomi': 'pink', 'vivo': 'red', 'realme': 'blue', 'oneplus': 'yellow', 'nokia': 'brown', 'sony': 'grey', 'google': 'black'}
+sourceStars = ColumnDataSource(data=dict(
+    x=smartPhonesDFRatingBiggerThan8['battery_capacity'],
+    y=smartPhonesDFRatingBiggerThan8['price'],
+    model=smartPhonesDFRatingBiggerThan8['model'],
+    brand=smartPhonesDFRatingBiggerThan8['brand_name'],
+    rating=smartPhonesDFRatingBiggerThan8['avg_rating']
+))
 
+sourceCircles = ColumnDataSource(data=dict(
+    x=smartPhonesDFRatingLesserThan8['battery_capacity'],
+    y=smartPhonesDFRatingLesserThan8['price'],
+    model=smartPhonesDFRatingLesserThan8['model'],
+    brand=smartPhonesDFRatingLesserThan8['brand_name'],
+    rating=smartPhonesDFRatingLesserThan8['avg_rating']
+))
+
+"""
 # Create a ColumnDataSource for the data
 sourceFigure2D = ColumnDataSource(data=dict(
     x=smartPhonesDF['battery_capacity'],
     y=smartPhonesDF['price'],
     model=smartPhonesDF['model'],
-    brand=smartPhonesDF['brand_name']
+    brand=smartPhonesDF['brand_name'],
+    rating=smartPhonesDF['avg_rating']
 ))
+"""
 
+
+# Define the colors for each brand
+brand_colors = {'samsung': 'cyan', 'apple': 'orange', 'huawei': 'green', 'oppo': 'purple', 'xiaomi': 'pink', 'vivo': 'red', 'realme': 'blue', 'oneplus': 'yellow', 'nokia': 'brown', 'sony': 'grey', 'google': 'black'}
 brand_mapper = factor_cmap(field_name='brand', factors=list(brand_colors.keys()), palette=list(brand_colors.values()))
 Figure2D = figure(x_axis_label="Battery capacity", y_axis_label="Price")
 
 # Add circles with data from the ColumnDataSource
-circle = Figure2D.circle(x='x', y='y', size=10, source=sourceFigure2D, color=brand_mapper, line_color ='black')#, legend_field='brand')
+Figure2D.circle(x='x', y='y', size=10, source=sourceCircles, color=brand_mapper, line_color ='black')#, legend_field='brand')
+Figure2D.square_pin(x='x', y='y', size=13, source=sourceStars,   color=brand_mapper, line_color ='black')#, legend_field='brand')
+
+"""
+# Calculate the number of rows in the DataFrame
+total_rows = len(smartPhonesDF)
+# Calculate the midpoint index to split the data
+midpoint = total_rows // 2
+
+# Split the data into two parts
+data_part1 = {
+    'x': smartPhonesDF['battery_capacity'][:midpoint],
+    'y': smartPhonesDF['price'][:midpoint],
+    'model': smartPhonesDF['model'][:midpoint],
+    'brand': smartPhonesDF['brand_name'][:midpoint]
+}
+
+data_part2 = {
+    'x': smartPhonesDF['battery_capacity'][midpoint:],
+    'y': smartPhonesDF['price'][midpoint:],
+    'model': smartPhonesDF['model'][midpoint:],
+    'brand': smartPhonesDF['brand_name'][midpoint:]
+}
+
+# Create two separate ColumnDataSources for the split data
+sourcePart1 = ColumnDataSource(data=data_part1)
+sourcePart2 = ColumnDataSource(data=data_part2)
+
+# Create circles and squares for different price conditions
+Figure2D.circle(x='x', y='y', size=10, source=sourcePart1, color=brand_mapper, line_color='black', legend_field='brand',
+                selection_fill_alpha=0.5, nonselection_fill_alpha=0.1, selection_line_color='black', nonselection_line_color='black',
+)
+
+Figure2D.star(x='x', y='y', size=15, source=  sourcePart2 , color=brand_mapper, line_color='black', legend_field='brand',
+                selection_fill_alpha=0.5, nonselection_fill_alpha=0.1, selection_line_color='black', nonselection_line_color='black',
+)
+"""
+
+
+
+
+
+
+
+
+
 
 #TODO add legend
 """
@@ -105,11 +173,30 @@ def updateFigure2D():
     Figure2D.yaxis.axis_label = y_axis_choose.value
     selected_smartphones = select_smartphones()
     Figure2D.title.text = f"{len(selected_smartphones)} smartphones"
-    sourceFigure2D.data = dict(
+    """sourceFigure2D.data = dict(
         x=selected_smartphones[x_name],
         y=selected_smartphones[y_name],
         model=selected_smartphones['model'],
         brand=selected_smartphones['brand_name']
+    )"""
+    updateSource(selected_smartphones, x_name, y_name)
+
+def updateSource(selection, x_name, y_name):
+    selectionGoodRating = selection[selection['avg_rating'] >= ratingThreshold]
+    sourceStars.data = dict(
+        x=selectionGoodRating[x_name],
+        y=selectionGoodRating[y_name],
+        model=selectionGoodRating['model'],
+        brand=selectionGoodRating['brand_name'],
+        rating = selectionGoodRating['avg_rating']
+    )
+    selectionNormalRating = selection[selection['avg_rating'] < ratingThreshold]
+    sourceCircles.data = dict(
+        x=selectionNormalRating[x_name],
+        y=selectionNormalRating[y_name],
+        model=selectionNormalRating['model'],
+        brand=selectionNormalRating['brand_name'],
+        rating = selectionNormalRating['avg_rating']
     )
 
 controls = [x_axis_choose, y_axis_choose, price_slider_filter, screen_size_bounds, brand_select]
@@ -124,7 +211,7 @@ controlsExport = controls + [choose_fast_charging]
 
 # Customize the HoverTool to display the model information
 hover = HoverTool()
-hover.tooltips = [("Model", "@model")]
+hover.tooltips = [("Model", "@model"), ("Rating", "@rating")]
 Figure2D.add_tools(hover)
 
 
