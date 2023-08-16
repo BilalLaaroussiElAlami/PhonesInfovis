@@ -21,6 +21,8 @@ def updateBarChart(newBarchart):
 
 curdoc().add_root(layout)
 
+
+"""
 updatedinitalData = {'models': ["x", "y", "z"],
               'values': [24, 25, 26]
             }
@@ -32,4 +34,5 @@ updatedbarchart = figure(x_range= ["x","y","z"],  height=350, title="comparing $
 updatedbarchart.vbar(x='models', top= 'values', source = updatasource ,width=0.4)
 updatedbarchart.xgrid.grid_line_color = None
 barchart.y_range.start = 0
-#layout.children[0]  = updatedbarchart
+layout.children[0]  = updatedbarchart
+"""
