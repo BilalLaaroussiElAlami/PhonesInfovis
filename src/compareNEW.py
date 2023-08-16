@@ -8,8 +8,8 @@ from bokeh.plotting import figure
 
 df = pd.read_csv('smartphones.csv')
 
-selected_attribute = 'price'
-selected_models = ['Apple iPhone 11', 'Apple iPhone 14', 'Google Pixel 2 XL', 'Samsung Galaxy S23 Plus']
+initial_attribute = 'price'
+initial_models = ['Apple iPhone 11', 'Apple iPhone 14', 'Google Pixel 2 XL', 'Samsung Galaxy S23 Plus']
 
 
 def get_value_attribute(model, attribute):
@@ -21,10 +21,10 @@ def get_values_multiple_models_one_attribute(models, attribute):
     return list(map(lambda model: get_value_attribute(model, attribute), models))
 
 
-def create_barchart(models):
+def create_barchart(models,attribute):
     source = ColumnDataSource(
         data=dict(models=models,
-                  values=get_values_multiple_models_one_attribute(models, selected_attribute)))
+                  values=get_values_multiple_models_one_attribute(models, attribute)))
     barchart = figure(x_range=models, height=350, title="comparing $attribute",
                       toolbar_location=None, tools="")
     barchart.vbar(x='models', top='values', source=source, width=0.4)
@@ -32,14 +32,14 @@ def create_barchart(models):
     barchart.y_range.start = 0
     return barchart
 
-barchart = create_barchart(selected_models)
+barchart = create_barchart(initial_models, initial_attribute)
 
 # will be called when selectinf models or attributes to see/compare
 def multi_select_callback(attr, old, new):
-    print("‼️  multi_select_callback")
     user_selected_models = multi_select_models.value
     print("🙏  user_selected_models", user_selected_models)
-    new_barchart = create_barchart(user_selected_models)
+    user_selected_attribute = multi_select_attributes.value[0]
+    new_barchart = create_barchart(user_selected_models, user_selected_attribute)
     update_barchart(layout, new_barchart)
 
 
