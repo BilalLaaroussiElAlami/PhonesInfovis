@@ -43,7 +43,8 @@ x_axis_choose = Select(title="X Axis", options=sorted(attribute_map.keys()), val
 y_axis_choose = Select(title="Y Axis", options=sorted(attribute_map.keys()), value="Price")
 price_slider_filter = Slider(title="maximum price", start=100, end=5000, value=500, step=1)
 screen_size_bounds = RangeSlider(start=0, end=15, value=(0, 15), step=1, title="screen size bounds (inclusive)")
-choose_fast_charging = RadioGroup(labels=["No", "Yes", "Any"], active=2) #todo l
+brand_select = MultiSelect(title="Brands", options= ['ALL'] + smartPhonesDF['brand_name'].unique().tolist(), value= ["ALL"], height = 100, width = 300)
+choose_fast_charging = RadioGroup(labels=["No", "Yes", "Any"], active=2)
 
 
 
@@ -88,10 +89,10 @@ def select_smartphones():
         & (smartPhonesDF['screen_size'] >= minimum_screen_size)
         & (smartPhonesDF['screen_size'] <= maximum_screen_size)
     ]
-
     if(want_fast_charging != 2):
         selected = selected[selected['fast_charging_available'] == want_fast_charging]
-
+    if('ALL' not in brand_select.value):
+        selected = selected[selected['brand_name'].isin(brand_select.value)]
     #print("☢️ selected: ", selected.head(10))
     return selected
 
@@ -111,7 +112,7 @@ def updateFigure2D():
         brand=selected_smartphones['brand_name']
     )
 
-controls = [x_axis_choose, y_axis_choose, price_slider_filter, screen_size_bounds]
+controls = [x_axis_choose, y_axis_choose, price_slider_filter, screen_size_bounds, brand_select]
 for control in controls:
     control.on_change('value', lambda attr, old, new: updateFigure2D())
 
