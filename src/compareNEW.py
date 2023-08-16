@@ -38,13 +38,23 @@ barchart = create_barchart(initial_models, initial_attribute)
 def multi_select_callback(attr, old, new):
     user_selected_models = multi_select_models.value
     print("🙏  user_selected_models", user_selected_models)
+    user_selected_attributes = multi_select_attributes.value
     user_selected_attribute = multi_select_attributes.value[0]
     new_barchart = create_barchart(user_selected_models, user_selected_attribute)
     update_barchart(layout, new_barchart)
+    if(len(user_selected_attributes) > 1):
+        new_barcharts = list(map(lambda attribute: create_barchart(user_selected_models, attribute), user_selected_attributes))
+        update_barcharts(layout, new_barcharts)
+
+
 
 
 def update_barchart(llayout, nnewbarchart):
     llayout.children[1].children[1] = nnewbarchart
+
+def update_barcharts(llayout, barcharts):
+    llayout.children[1].children[1] = row(barcharts)
+
 
 
 optionsModels = df['model'].unique().tolist()
