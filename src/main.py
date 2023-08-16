@@ -4,9 +4,10 @@ from bokeh.models import ColumnDataSource
 from bokeh.plotting import figure
 
 from compare import multi_select_models, multi_select_attributes, barchart
-from explore import x_axis_choose, y_axis_choose, Figure2D
+from explore import x_axis_choose, y_axis_choose, Figure2D, price_slider_filter, controlsExport
 
-exploreElements = column(column(x_axis_choose, y_axis_choose), Figure2D)
+"""x_axis_choose, y_axis_choose, price_slider_filter"""
+exploreElements = column(column(controlsExport) , Figure2D)
 compareElements = column(row(multi_select_models, multi_select_attributes), barchart)
 layout = row(exploreElements, compareElements)
 
@@ -19,8 +20,6 @@ def updateBarChart(newBarchart):
 
 
 curdoc().add_root(layout)
-
-
 
 updatedinitalData = {'models': ["x", "y", "z"],
               'values': [24, 25, 26]

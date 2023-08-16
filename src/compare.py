@@ -65,4 +65,3 @@ multi_select_attributes = MultiSelect(title="Select attributes:", value=["price"
 multi_select_attributes.on_change('value', multi_select_callback)
 
 
-#from main import updateBarChart
