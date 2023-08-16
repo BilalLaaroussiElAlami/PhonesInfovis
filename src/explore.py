@@ -1,8 +1,9 @@
 import pandas as pd
 from bokeh.io import show, curdoc
 from bokeh.layouts import column, row
-from bokeh.models import ColumnDataSource, HoverTool, Select, MultiSelect, Slider, RangeSlider, RadioGroup
+from bokeh.models import ColumnDataSource, HoverTool, Select, MultiSelect, Slider, RangeSlider, RadioGroup, Legend
 from bokeh.plotting import figure
+from bokeh.transform import factor_cmap
 
 from compare import multi_select_models, multi_select_attributes
 
@@ -46,22 +47,34 @@ choose_fast_charging = RadioGroup(labels=["No", "Yes", "Any"], active=2) #todo l
 
 
 
-# make a graph where the x-axis is the battery_capacity and the y-axis is the price, plot the phone models as circles, when the user hovers over a circle
-# more information is shown about the phone model:
+
+# Define the colors for each brand
+brand_colors = {'samsung': 'cyan', 'apple': 'orange', 'huawei': 'green'}
 
 # Create a ColumnDataSource for the data
 sourceFigure2D = ColumnDataSource(data=dict(
     x=smartPhonesDF['battery_capacity'],
     y=smartPhonesDF['price'],
     model=smartPhonesDF['model'],
-    brand = smartPhonesDF['brand_name']
+    brand=smartPhonesDF['brand_name']
 ))
 
-# Create the figure
+brand_mapper = factor_cmap(field_name='brand', factors=list(brand_colors.keys()), palette=list(brand_colors.values()))
 Figure2D = figure(x_axis_label="Battery capacity", y_axis_label="Price")
 
 # Add circles with data from the ColumnDataSource
-circle = Figure2D.circle(x='x', y='y', size=10, source=sourceFigure2D, color ='blue', line_color ='black')
+circle = Figure2D.circle(x='x', y='y', size=10, source=sourceFigure2D, color=brand_mapper, line_color ='black')#, legend_field='brand')
+
+#TODO add legend
+"""
+# Show the legend
+Figure2D.legend.title = 'Brand'
+Figure2D.legend.label_text_font_size = '10pt'
+
+# Customize the legend items' appearance
+Figure2D.legend.background_fill_alpha = 0.7
+Figure2D.legend.label_standoff = 8
+"""
 
 
 def select_smartphones():

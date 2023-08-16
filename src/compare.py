@@ -7,8 +7,8 @@ from bokeh.plotting import figure
 
 df = pd.read_csv('smartphones.csv')
 
-initial_attribute = 'avg_rating',
-initial_models = ['Apple iPhone 11', 'Google Pixel 2 XL']
+initial_attribute = 'price'
+initial_models = ['Apple iPhone 11',  'Apple iPhone 14', 'Google Pixel 2 XL', 'Samsung Galaxy S23 Plus']
 
 def get_value_attribute(model, attribute):
     print("🤔  model: ", model, " attribute: ", attribute)
