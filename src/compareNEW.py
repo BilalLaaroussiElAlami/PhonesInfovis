@@ -25,7 +25,7 @@ def create_barchart(models,attribute):
     source = ColumnDataSource(
         data=dict(models=models,
                   values=get_values_multiple_models_one_attribute(models, attribute)))
-    barchart = figure(x_range=models, height=350, title="comparing $attribute",
+    barchart = figure(x_range=models, height=350, title=f"comparing {attribute}",
                       toolbar_location=None, tools="")
     barchart.vbar(x='models', top='values', source=source, width=0.4)
     barchart.xgrid.grid_line_color = None

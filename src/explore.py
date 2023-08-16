@@ -50,7 +50,7 @@ choose_fast_charging = RadioGroup(labels=["No", "Yes", "Any"], active=2)
 
 
 # Define the colors for each brand
-brand_colors = {'samsung': 'cyan', 'apple': 'orange', 'huawei': 'green'}
+brand_colors = {'samsung': 'cyan', 'apple': 'orange', 'huawei': 'green', 'oppo': 'purple', 'xiaomi': 'pink'}
 
 # Create a ColumnDataSource for the data
 sourceFigure2D = ColumnDataSource(data=dict(
