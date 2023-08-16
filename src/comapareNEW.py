@@ -5,6 +5,7 @@ from bokeh.layouts import column, row
 from bokeh.models import MultiSelect, ColumnDataSource
 from bokeh.plotting import figure
 
+
 df = pd.read_csv('smartphones.csv')
 
 selected_attribute = 'price'
@@ -39,7 +40,11 @@ def multi_select_callback(attr, old, new):
     user_selected_models = multi_select_models.value
     print("🙏  user_selected_models", user_selected_models)
     new_barchart = create_barchart(user_selected_models)
-    layout.children[1].children[1] = new_barchart
+    update_barchart(layout, new_barchart)
+
+
+def update_barchart(llayout, nnewbarchart):
+    llayout.children[1].children[1] = nnewbarchart
 
 
 optionsModels = df['model'].unique().tolist()
@@ -53,7 +58,11 @@ multi_select_attributes = MultiSelect(title="Select attributes:", value=["price"
                                       height=200)
 multi_select_attributes.on_change('value', multi_select_callback)
 
-compareElements = column(row(multi_select_models, multi_select_attributes), barchart)
-layout = row(multi_select_models, compareElements)
+layout = None
 
-curdoc().add_root(layout)
+#This module would needs to have acces to the layout because it will modify it!
+def getLayout(llayout):
+    global layout
+    layout = llayout
+
+

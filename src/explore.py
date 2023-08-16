@@ -5,7 +5,7 @@ from bokeh.models import ColumnDataSource, HoverTool, Select, MultiSelect, Slide
 from bokeh.plotting import figure
 from bokeh.transform import factor_cmap
 
-from compare import multi_select_models, multi_select_attributes
+from compareOLD import multi_select_models, multi_select_attributes
 
 # maka a dataframe from the csv file
 smartPhonesDF = pd.read_csv('smartphones.csv')
