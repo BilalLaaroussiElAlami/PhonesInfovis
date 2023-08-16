@@ -56,7 +56,7 @@ def update_barcharts(llayout, barcharts):
     llayout.children[1].children[1] = row(barcharts)
 
 
-
+#INTERACTION WIDGETS
 optionsModels = df['model'].unique().tolist()
 multi_select_models = MultiSelect(title="select model(s)::", value=["Apple iPhone 11"], options=optionsModels,
                                   height=200)

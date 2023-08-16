@@ -2,10 +2,11 @@ import pandas as pd
 from bokeh.io import show, curdoc
 from bokeh.layouts import column, row
 from bokeh.models import ColumnDataSource, HoverTool, Select, MultiSelect, Slider, RangeSlider, RadioGroup, Legend
+from bokeh.models.ui.dialogs import Button
 from bokeh.plotting import figure
 from bokeh.transform import factor_cmap
 
-from compareOLD import multi_select_models, multi_select_attributes
+
 
 # maka a dataframe from the csv file
 smartPhonesDF = pd.read_csv('smartphones.csv')
@@ -39,13 +40,14 @@ attribute_map = {
 }
 
 
+#INTERACTION WIDGETS
 x_axis_choose = Select(title="X Axis", options=sorted(attribute_map.keys()), value="Battery Capacity")
 y_axis_choose = Select(title="Y Axis", options=sorted(attribute_map.keys()), value="Price")
 price_slider_filter = Slider(title="maximum price", start=100, end=5000, value=500, step=1)
 screen_size_bounds = RangeSlider(start=0, end=15, value=(0, 15), step=1, title="screen size bounds (inclusive)")
 brand_select = MultiSelect(title="Brands", options= ['ALL'] + smartPhonesDF['brand_name'].unique().tolist(), value= ["ALL"], height = 100, width = 300)
 choose_fast_charging = RadioGroup(labels=["No", "Yes", "Any"], active=2)
-
+group_by_brand = RadioGroup(labels=["Yes", "No"], active=1)
 
 
 ratingThreshold = 8.0
@@ -90,48 +92,6 @@ Figure2D = figure(x_axis_label="Battery capacity", y_axis_label="Price")
 Figure2D.circle(x='x', y='y', size=10, source=sourceCircles, color=brand_mapper, line_color ='black')#, legend_field='brand')
 Figure2D.square_pin(x='x', y='y', size=13, source=sourceStars,   color=brand_mapper, line_color ='black')#, legend_field='brand')
 
-"""
-# Calculate the number of rows in the DataFrame
-total_rows = len(smartPhonesDF)
-# Calculate the midpoint index to split the data
-midpoint = total_rows // 2
-
-# Split the data into two parts
-data_part1 = {
-    'x': smartPhonesDF['battery_capacity'][:midpoint],
-    'y': smartPhonesDF['price'][:midpoint],
-    'model': smartPhonesDF['model'][:midpoint],
-    'brand': smartPhonesDF['brand_name'][:midpoint]
-}
-
-data_part2 = {
-    'x': smartPhonesDF['battery_capacity'][midpoint:],
-    'y': smartPhonesDF['price'][midpoint:],
-    'model': smartPhonesDF['model'][midpoint:],
-    'brand': smartPhonesDF['brand_name'][midpoint:]
-}
-
-# Create two separate ColumnDataSources for the split data
-sourcePart1 = ColumnDataSource(data=data_part1)
-sourcePart2 = ColumnDataSource(data=data_part2)
-
-# Create circles and squares for different price conditions
-Figure2D.circle(x='x', y='y', size=10, source=sourcePart1, color=brand_mapper, line_color='black', legend_field='brand',
-                selection_fill_alpha=0.5, nonselection_fill_alpha=0.1, selection_line_color='black', nonselection_line_color='black',
-)
-
-Figure2D.star(x='x', y='y', size=15, source=  sourcePart2 , color=brand_mapper, line_color='black', legend_field='brand',
-                selection_fill_alpha=0.5, nonselection_fill_alpha=0.1, selection_line_color='black', nonselection_line_color='black',
-)
-"""
-
-
-
-
-
-
-
-
 
 
 #TODO add legend
@@ -151,7 +111,6 @@ def select_smartphones():
     minimum_screen_size = screen_size_bounds.value[0]
     maximum_screen_size = screen_size_bounds.value[1]
     want_fast_charging = choose_fast_charging.active #0 is no, 1 is yes, 3 doesnt matter
-    print("☢️ want_fast_charging: ", want_fast_charging)
     selected = smartPhonesDF[
         (smartPhonesDF['price'] <= max_price)
         & (smartPhonesDF['screen_size'] >= minimum_screen_size)
@@ -203,10 +162,11 @@ controls = [x_axis_choose, y_axis_choose, price_slider_filter, screen_size_bound
 for control in controls:
     control.on_change('value', lambda attr, old, new: updateFigure2D())
 
-choose_fast_charging.on_change('active', lambda attr, old, new: updateFigure2D())
+selectboxes = [choose_fast_charging, group_by_brand]
+for selectbox in selectboxes:
+    selectbox.on_change('active', lambda attr, old, new: updateFigure2D())
 
-controlsExport = controls + [choose_fast_charging]
-
+controlsExport = controls + selectboxes
 
 
 # Customize the HoverTool to display the model information
