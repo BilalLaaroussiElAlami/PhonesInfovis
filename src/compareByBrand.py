@@ -39,6 +39,12 @@ barchart = create_barchart(initial_brands, initial_attribute)
 def create_data_table(brands, attributes):
     filtered_data = smartphones_brand_averages_df[smartphones_brand_averages_df['brand_name'].isin(brands)]
     html = '<table>'
+    # Create the header row
+    html += '<tr>'
+    for attr in ['Model'] + attributes:
+        html += f'<th>{attr}</th>'
+    html += '</tr>'
+
     for index, row in filtered_data.iterrows():
         html += '<tr>'
         for attr in ['brand_name'] + attributes:

@@ -33,6 +33,12 @@ def create_data_table(models, attributes):
     data = pd.read_csv('smartphones.csv')
     filtered_data = data[data['model'].isin(models)]
     html = '<table>'
+    # Create the header row
+    html += '<tr>'
+    for attr in ['Model'] + attributes:
+        html += f'<th>{attr}</th>'
+    html += '</tr>'
+
     for index, row in filtered_data.iterrows():
         html += '<tr>'
         for attr in ['model'] + attributes:
