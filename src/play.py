@@ -16,12 +16,16 @@ print("n fast_charging_available",smartPhonesDF['fast_charging_available'].shape
 print("n avg_rating",smartPhonesDF['avg_rating'].shape[0])
 print("some screen sizes", smartPhonesDF['screen_size'].unique()[:10])
 print("some available_charging values", smartPhonesDF['fast_charging_available'].head(10))
+print("some primary rear cameras", smartPhonesDF['primary_camera_rear'].head(10))
+print("some primary front cameras", smartPhonesDF['primary_camera_front'].head(10))
+
+
 
 #show the maximum rating
-print("max rating", smartPhonesDF['avg_rating'].max())
+print("max rating\n", smartPhonesDF['avg_rating'].max())
 
 #show the minimum rating
-print("min rating", smartPhonesDF['avg_rating'].min())
+print("min rating\n", smartPhonesDF['avg_rating'].min())
 
 #make 2 dataframes the first dataframe for all rows where the rating is less than 8 and another where the rating is greater than 8
 smartPhonesDFFilterRating = smartPhonesDF[smartPhonesDF['avg_rating'] < 8]

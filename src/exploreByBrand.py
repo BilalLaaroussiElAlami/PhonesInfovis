@@ -1,20 +1,18 @@
 import pandas as pd
-from bokeh.io import show, curdoc
-from bokeh.layouts import column, row
-from bokeh.models import ColumnDataSource, HoverTool, Select, MultiSelect, Slider, RangeSlider, RadioGroup, Legend
-from bokeh.models.ui.dialogs import Button
+from bokeh.models import ColumnDataSource, HoverTool, Select, MultiSelect, Slider, RangeSlider, RadioGroup
 from bokeh.plotting import figure
 from bokeh.transform import factor_cmap
 
 
 # maka a dataframe from the csv file
-smartPhonesDF = pd.read_csv('smartphones.csv')
-# print the brands of the phones
-#print(df['brand_name'].unique())
+smartphones_brand_averages_df = pd.read_csv('smartphones.csv')
+
+numerical_columns = smartphones_brand_averages_df.select_dtypes(include=['number'])
+# Group by 'brand' and calculate the averages for numerical columns
+smartphones_brand_averages_df = numerical_columns.groupby(smartphones_brand_averages_df['brand_name']).mean().reset_index()
 
 attribute_map = {
     "Brand": "brand_name",
-    "Model": "model",
     "Price": "price",
     "Average Rating": "avg_rating",
     "5G Support": "5G_or_not",
@@ -29,7 +27,6 @@ attribute_map = {
     "Screen Size": "screen_size",
     "Refresh Rate": "refresh_rate",
     "Number of Rear Cameras": "num_rear_cameras",
-    "Operating System": "os",
     "Primary Rear Camera": "primary_camera_rear",
     "Primary Front Camera": "primary_camera_front",
     "Extended Memory Available": "extended_memory_available",
@@ -43,30 +40,28 @@ x_axis_choose = Select(title="X Axis", options=sorted(attribute_map.keys()), val
 y_axis_choose = Select(title="Y Axis", options=sorted(attribute_map.keys()), value="Price")
 price_slider_filter = Slider(title="maximum price", start=100, end=5000, value=500, step=1)
 screen_size_bounds = RangeSlider(start=0, end=15, value=(0, 15), step=1, title="screen size bounds (inclusive)")
-brand_select = MultiSelect(title="Brands", options= ['ALL'] + smartPhonesDF['brand_name'].unique().tolist(), value= ["ALL"], height = 100, width = 300)
+brand_select = MultiSelect(title="Brands", options= ['ALL'] + smartphones_brand_averages_df['brand_name'].unique().tolist(), value= ["ALL"], height = 100, width = 300)
 choose_fast_charging = RadioGroup(labels=["No", "Yes", "Any"], active=2)
 group_by_brand = RadioGroup(labels=["Yes", "No"], active=1)
 
 
 ratingThreshold = 8.0
 #make 2 dataframes the first dataframe for all rows where the rating is less than 8 and another where the rating is greater than 8
-smartphonesDFExcellentRating = smartPhonesDF[smartPhonesDF['avg_rating'] >= ratingThreshold]
-smartphonesDFNormalRating = smartPhonesDF[smartPhonesDF['avg_rating'] < ratingThreshold]
+smartphones_brand_averages_dfExcellentRating = smartphones_brand_averages_df[smartphones_brand_averages_df['avg_rating'] >= ratingThreshold]
+smartphones_brand_averages_dfNormalRating = smartphones_brand_averages_df[smartphones_brand_averages_df['avg_rating'] < ratingThreshold]
 
 sourceStars = ColumnDataSource(data=dict(
-    x=smartphonesDFExcellentRating['battery_capacity'],
-    y=smartphonesDFExcellentRating['price'],
-    model=smartphonesDFExcellentRating['model'],
-    brand=smartphonesDFExcellentRating['brand_name'],
-    rating=smartphonesDFExcellentRating['avg_rating']
+    x=smartphones_brand_averages_dfExcellentRating['battery_capacity'],
+    y=smartphones_brand_averages_dfExcellentRating['price'],
+    brand=smartphones_brand_averages_dfExcellentRating['brand_name'],
+    rating=smartphones_brand_averages_dfExcellentRating['avg_rating']
 ))
 
 sourceCircles = ColumnDataSource(data=dict(
-    x=smartphonesDFNormalRating['battery_capacity'],
-    y=smartphonesDFNormalRating['price'],
-    model=smartphonesDFNormalRating['model'],
-    brand=smartphonesDFNormalRating['brand_name'],
-    rating=smartphonesDFNormalRating['avg_rating']
+    x=smartphones_brand_averages_dfNormalRating['battery_capacity'],
+    y=smartphones_brand_averages_dfNormalRating['price'],
+    brand=smartphones_brand_averages_dfNormalRating['brand_name'],
+    rating=smartphones_brand_averages_dfNormalRating['avg_rating']
 ))
 
 
@@ -96,10 +91,10 @@ def select_smartphones():
     minimum_screen_size = screen_size_bounds.value[0]
     maximum_screen_size = screen_size_bounds.value[1]
     want_fast_charging = choose_fast_charging.active #0 is no, 1 is yes, 3 doesnt matter
-    selected = smartPhonesDF[
-        (smartPhonesDF['price'] <= max_price)
-        & (smartPhonesDF['screen_size'] >= minimum_screen_size)
-        & (smartPhonesDF['screen_size'] <= maximum_screen_size)
+    selected = smartphones_brand_averages_df[
+        (smartphones_brand_averages_df['price'] <= max_price)
+        & (smartphones_brand_averages_df['screen_size'] >= minimum_screen_size)
+        & (smartphones_brand_averages_df['screen_size'] <= maximum_screen_size)
     ]
     if(want_fast_charging != 2):
         selected = selected[selected['fast_charging_available'] == want_fast_charging]
@@ -130,7 +125,7 @@ def updateSource(selection, x_name, y_name):
     sourceStars.data = dict(
         x=selectionGoodRating[x_name],
         y=selectionGoodRating[y_name],
-        model=selectionGoodRating['model'],
+
         brand=selectionGoodRating['brand_name'],
         rating = selectionGoodRating['avg_rating']
     )
@@ -138,7 +133,6 @@ def updateSource(selection, x_name, y_name):
     sourceCircles.data = dict(
         x=selectionNormalRating[x_name],
         y=selectionNormalRating[y_name],
-        model=selectionNormalRating['model'],
         brand=selectionNormalRating['brand_name'],
         rating = selectionNormalRating['avg_rating']
     )
@@ -156,7 +150,7 @@ controlsExport = controls + selectboxes
 
 # Customize the HoverTool to display the model information
 hover = HoverTool()
-hover.tooltips = [("Model", "@model"), ("Rating", "@rating")]
+hover.tooltips = [("Rating", "@rating")]
 Figure2D.add_tools(hover)
 
 
