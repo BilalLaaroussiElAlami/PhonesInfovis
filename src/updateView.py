@@ -5,7 +5,7 @@ from compareByBrand import compareViewBrand
 from explore import exploreViewModels
 from exploreByBrand import exploreViewBrand
 
-group_by_brand = RadioGroup(labels=["Yes", "No"], active=1)
+group_by_brand = RadioGroup(labels=["Yes", "No"], active=0)
 
 def updateView():
     print("🤔  group_by_brand", group_by_brand.active)

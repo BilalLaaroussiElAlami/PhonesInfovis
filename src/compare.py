@@ -39,9 +39,10 @@ def create_data_table(models, attributes):
             html += f'<td> {row[attr]}</td>'
         html += '</tr>'
     html += '</table>'
+    print(html)
     return Div(text = html)
 
-data_table = create_data_table(initial_models, [initial_attribute])
+datatable = create_data_table(initial_models, [initial_attribute])
 
 barchart = create_barchart(initial_models, initial_attribute)
 # will be called when selectinf models or attributes to see/compare
@@ -82,10 +83,7 @@ multi_select_attributes = MultiSelect(title="Select attributes:", value=["price"
                                       height=200)
 multi_select_attributes.on_change('value', multi_select_callback)
 
-
-
-
-compareViewModels = column(column(row(multi_select_models, multi_select_attributes), data_table), barchart, width = 1200)
+compareViewModels = column(column(row(multi_select_models, multi_select_attributes), datatable), barchart, width = 1200)
 
 layout = None
 

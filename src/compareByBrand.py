@@ -36,20 +36,21 @@ def create_barchart(brands, attribute):
 
 barchart = create_barchart(initial_brands, initial_attribute)
 # will be called when selecting brands or attributes to see/compare
-def create_data_table(models, attributes):
-    data = pd.read_csv('smartphones.csv')
-    filtered_data = data[data['model'].isin(models)]
+def create_data_table(brands, attributes):
+    filtered_data = smartphones_brand_averages_df[smartphones_brand_averages_df['brand_name'].isin(brands)]
     html = '<table>'
     for index, row in filtered_data.iterrows():
         html += '<tr>'
-        for attr in ['model'] + attributes:
+        for attr in ['brand_name'] + attributes:
             html += f'<td> {row[attr]}</td>'
         html += '</tr>'
     html += '</table>'
+    print("html brandddddd 😝: ")
+    print(html)
     return Div(text = html)
 
 data_table = create_data_table(initial_brands, [initial_attribute])
-show(data_table)
+
 
 
 def multi_select_callback(attr, old, new):
@@ -70,7 +71,7 @@ def update_barchart(llayout, nnewbarchart):
 
 
 def update_barcharts(llayout, barcharts):
-    compareViewBrand.children[1]  = row(barcharts)
+    compareViewBrand.children[1]  = column(barcharts)
     llayout.children[1].children[1] = compareViewBrand
 
 def update_data_table(llayout, data_table):
@@ -96,7 +97,7 @@ def getLayoutForCompareByBrand(llayout):
     global layout
     layout = llayout
 
-compareViewBrand = column(column(row(multi_select_models, multi_select_attributes), data_table), barchart, width = 1200)
+compareViewBrand = column(column(row(multi_select_models, multi_select_attributes), data_table, barchart, width = 1200))
 
 
 
