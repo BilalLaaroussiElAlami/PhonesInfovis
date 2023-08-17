@@ -156,7 +156,7 @@ selectboxes = [choose_fast_charging]
 choose_fast_charging.on_change('active', lambda attr, old, new: updateFigure2D())
 
 controlsExport = controls + selectboxes
-exploreViewModels = column(column(controlsExport), Figure2D, width = 1200)
+exploreViewModels = column(column(controlsExport), Figure2D, width = 1000)
 
 # Customize the HoverTool to display the model information
 hover = HoverTool()

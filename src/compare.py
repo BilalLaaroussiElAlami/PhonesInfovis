@@ -58,7 +58,9 @@ def multi_select_callback(attr, old, new):
     if(len(user_selected_attributes) > 1):
         new_barcharts = list(map(lambda attribute: create_barchart(user_selected_models, attribute), user_selected_attributes))
         update_barcharts(layout, new_barcharts)
+    update_datatable(layout, create_data_table(user_selected_models, user_selected_attributes))
 
+#creates a new barchart and changes the layout
 def update_barchart(llayout, nnewbarchart):
     compareViewModels.children[1] = nnewbarchart
     llayout.children[1].children[1] = compareViewModels
@@ -66,6 +68,11 @@ def update_barchart(llayout, nnewbarchart):
 def update_barcharts(llayout, barcharts):
     compareViewModels.children[1]  = column(barcharts)
     llayout.children[1].children[1] = compareViewModels
+
+def update_datatable(llayout, data_table):
+    compareViewModels.children[0].children[1] = data_table
+    llayout.children[1].children[1] = compareViewModels
+
 
 #INTERACTION WIDGETS
 optionsModels = df['model'].unique().tolist()
@@ -79,7 +86,10 @@ multi_select_attributes = MultiSelect(title="Select attributes:", value=["price"
                                       height=200)
 multi_select_attributes.on_change('value', multi_select_callback)
 
-compareViewModels = column( column(row(multi_select_models, multi_select_attributes), datatable), barchart, width = 1200)
+compareViewModels = column( column(
+                                    row(multi_select_models, multi_select_attributes),
+                                    datatable),
+                            barchart, width = 1200)
 
 layout = None
 
