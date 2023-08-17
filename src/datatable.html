@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Bokeh Plot</title>
+    <style>
+      html, body {
+        box-sizing: border-box;
+        display: flow-root;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-3.2.2.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.2.2.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.2.2.min.js"></script>
+    <script type="text/javascript">
+        Bokeh.set_log_level("info");
+    </script>
+  </head>
+  <body>
+    <div id="f9d73d51-ff7c-4102-a703-3d13b034a8db" data-root-id="p1040" style="display: contents;"></div>
+  
+    <script type="application/json" id="p1080">
+      {"d16c37ff-c9f6-4c5d-bfeb-92a296346556":{"version":"3.2.2","title":"Bokeh Application","roots":[{"type":"object","name":"DataTable","id":"p1040","attributes":{"height_policy":"fit","source":{"type":"object","name":"ColumnDataSource","id":"p1022","attributes":{"selected":{"type":"object","name":"Selection","id":"p1023","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1024"},"data":{"type":"map","entries":[["index",{"type":"ndarray","array":{"type":"bytes","data":"AAAAABUAAAA/AAAApgIAAA=="},"shape":[4],"dtype":"int32","order":"little"}],["brand_name",{"type":"ndarray","array":["apple","apple","google","samsung"],"shape":[4],"dtype":"object","order":"little"}],["model",{"type":"ndarray","array":["Apple iPhone 11","Apple iPhone 14","Google Pixel 2 XL","Samsung Galaxy S23 Plus"],"shape":[4],"dtype":"object","order":"little"}],["price",{"type":"ndarray","array":{"type":"bytes","data":"V5gAAM8BAQB2PgAA/ksBAA=="},"shape":[4],"dtype":"int32","order":"little"}],["avg_rating",{"type":"ndarray","array":{"type":"bytes","data":"MzMzMzMzHUAzMzMzMzMgQJqZmZmZmRtAzczMzMzMIUA="},"shape":[4],"dtype":"float64","order":"little"}],["5G_or_not",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAEAAAAAAAAAAQAAAA=="},"shape":[4],"dtype":"int32","order":"little"}],["processor_brand",{"type":"ndarray","array":["bionic","bionic","snapdragon","snapdragon"],"shape":[4],"dtype":"object","order":"little"}],["num_cores",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAAGEAAAAAAAAAYQAAAAAAAACBAAAAAAAAAIEA="},"shape":[4],"dtype":"float64","order":"little"}],["processor_speed",{"type":"ndarray","array":{"type":"bytes","data":"MzMzMzMzBUDD9Shcj8IJQM3MzMzMzAJAmpmZmZmZCUA="},"shape":[4],"dtype":"float64","order":"little"}],["battery_capacity",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAABMqEAAAAAAAJ6pQAAAAAAAgKtAAAAAAABcskA="},"shape":[4],"dtype":"float64","order":"little"}],["fast_charging_available",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAEAAAABAAAAAQAAAA=="},"shape":[4],"dtype":"int32","order":"little"}],["fast_charging",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAA+H8AAAAAAAD4fwAAAAAAAPh/AAAAAACARkA="},"shape":[4],"dtype":"float64","order":"little"}],["ram_capacity",{"type":"ndarray","array":{"type":"bytes","data":"BAAAAAYAAAAEAAAACAAAAA=="},"shape":[4],"dtype":"int32","order":"little"}],["internal_memory",{"type":"ndarray","array":{"type":"bytes","data":"QAAAAIAAAACAAAAAAAEAAA=="},"shape":[4],"dtype":"int32","order":"little"}],["screen_size",{"type":"ndarray","array":{"type":"bytes","data":"ZmZmZmZmGEBmZmZmZmYYQAAAAAAAABhAZmZmZmZmGkA="},"shape":[4],"dtype":"float64","order":"little"}],["refresh_rate",{"type":"ndarray","array":{"type":"bytes","data":"PAAAADwAAAA8AAAAeAAAAA=="},"shape":[4],"dtype":"int32","order":"little"}],["num_rear_cameras",{"type":"ndarray","array":{"type":"bytes","data":"AgAAAAIAAAABAAAAAwAAAA=="},"shape":[4],"dtype":"int32","order":"little"}],["os",{"type":"ndarray","array":["ios","ios","android","android"],"shape":[4],"dtype":"object","order":"little"}],["primary_camera_rear",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAAKEAAAAAAAAAoQGZmZmZmZihAAAAAAAAASUA="},"shape":[4],"dtype":"float64","order":"little"}],["primary_camera_front",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAAKEAAAAAAAAAoQAAAAAAAACBAAAAAAAAAKEA="},"shape":[4],"dtype":"float64","order":"little"}],["extended_memory_available",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAAAAAAAAAAAAAAAA=="},"shape":[4],"dtype":"int32","order":"little"}],["resolution_height",{"type":"ndarray","array":{"type":"bytes","data":"AAcAAOQJAABACwAAJAkAAA=="},"shape":[4],"dtype":"int32","order":"little"}],["resolution_width",{"type":"ndarray","array":{"type":"bytes","data":"PAMAAJIEAACgBQAAOAQAAA=="},"shape":[4],"dtype":"int32","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p1044","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1045"}}},"columns":[{"type":"object","name":"TableColumn","id":"p1025","attributes":{"field":"Model","title":"Model","width":100,"formatter":{"type":"object","name":"StringFormatter","id":"p1026"},"editor":{"type":"object","name":"StringEditor","id":"p1027"}}},{"type":"object","name":"TableColumn","id":"p1028","attributes":{"field":"price","title":"price","width":100,"formatter":{"type":"object","name":"StringFormatter","id":"p1029"},"editor":{"type":"object","name":"StringEditor","id":"p1030"}}},{"type":"object","name":"TableColumn","id":"p1031","attributes":{"field":"num_cores","title":"num_cores","width":100,"formatter":{"type":"object","name":"StringFormatter","id":"p1032"},"editor":{"type":"object","name":"StringEditor","id":"p1033"}}},{"type":"object","name":"TableColumn","id":"p1034","attributes":{"field":"processor_speed","title":"processor_speed","width":100,"formatter":{"type":"object","name":"StringFormatter","id":"p1035"},"editor":{"type":"object","name":"StringEditor","id":"p1036"}}},{"type":"object","name":"TableColumn","id":"p1037","attributes":{"field":"battery_capacity","title":"battery_capacity","width":100,"formatter":{"type":"object","name":"StringFormatter","id":"p1038"},"editor":{"type":"object","name":"StringEditor","id":"p1039"}}}]}}]}}
+    </script>
+    <script type="text/javascript">
+      (function() {
+        const fn = function() {
+          Bokeh.safely(function() {
+            (function(root) {
+              function embed_document(root) {
+              const docs_json = document.getElementById('p1080').textContent;
+              const render_items = [{"docid":"d16c37ff-c9f6-4c5d-bfeb-92a296346556","roots":{"p1040":"f9d73d51-ff7c-4102-a703-3d13b034a8db"},"root_ids":["p1040"]}];
+              root.Bokeh.embed.embed_items(docs_json, render_items);
+              }
+              if (root.Bokeh !== undefined) {
+                embed_document(root);
+              } else {
+                let attempts = 0;
+                const timer = setInterval(function(root) {
+                  if (root.Bokeh !== undefined) {
+                    clearInterval(timer);
+                    embed_document(root);
+                  } else {
+                    attempts++;
+                    if (attempts > 100) {
+                      clearInterval(timer);
+                      console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+                    }
+                  }
+                }, 10, root)
+              }
+            })(window);
+          });
+        };
+        if (document.readyState != "loading") fn();
+        else document.addEventListener("DOMContentLoaded", fn);
+      })();
+    </script>
+  </body>
+</html>

@@ -1,8 +1,9 @@
 # Allow user to select multiple models they wish to compare
 import pandas as pd
+from bokeh.embed.bundle import Style
 from bokeh.io import curdoc
 from bokeh.layouts import column, row
-from bokeh.models import MultiSelect, ColumnDataSource
+from bokeh.models import MultiSelect, ColumnDataSource, TableColumn, DataTable
 from bokeh.plotting import figure
 
 
@@ -31,6 +32,21 @@ def create_barchart(models,attribute):
     return barchart
 
 barchart = create_barchart(initial_models, initial_attribute)
+
+
+def create_data_table(models, attributes):
+    filtered_data = df[df['model'].isin(models)]
+    source = ColumnDataSource(filtered_data)
+    column_width = 190
+    columns = [TableColumn(field='model', title='model', width=column_width)] + \
+              [TableColumn(field=attribute, title=attribute, width=column_width) for attribute in attributes]
+    row_height = 25  # Adjust this value as needed
+    n_rows = len(models)
+    table_height = n_rows * row_height
+    data_table = DataTable(source=source, columns=columns, width=column_width * (len(attributes) + 1), height = table_height)
+    return data_table
+datatable = create_data_table(initial_models, [initial_attribute])
+
 # will be called when selectinf models or attributes to see/compare
 def multi_select_callback(attr, old, new):
     user_selected_models = multi_select_models.value
@@ -47,11 +63,9 @@ def update_barchart(llayout, nnewbarchart):
     compareViewModels.children[1] = nnewbarchart
     llayout.children[1].children[1] = compareViewModels
 
-
 def update_barcharts(llayout, barcharts):
-    compareViewModels.children[1]  = row(barcharts)
+    compareViewModels.children[1]  = column(barcharts)
     llayout.children[1].children[1] = compareViewModels
-
 
 #INTERACTION WIDGETS
 optionsModels = df['model'].unique().tolist()
@@ -65,7 +79,7 @@ multi_select_attributes = MultiSelect(title="Select attributes:", value=["price"
                                       height=200)
 multi_select_attributes.on_change('value', multi_select_callback)
 
-compareViewModels = column(row(multi_select_models, multi_select_attributes), barchart, width = 1200)
+compareViewModels = column( column(row(multi_select_models, multi_select_attributes), datatable), barchart, width = 1200)
 
 layout = None
 

@@ -53,7 +53,7 @@ def update_barchart(llayout, nnewbarchart):
 
 
 def update_barcharts(llayout, barcharts):
-    compareViewBrand.children[1]  = row(barcharts)
+    compareViewBrand.children[1]  = column(barcharts)
     llayout.children[1].children[1] = compareViewBrand
 
 

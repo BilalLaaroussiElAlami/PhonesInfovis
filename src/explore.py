@@ -1,7 +1,10 @@
 import pandas as pd
+from bokeh import events
+from bokeh.events import Tap
 from bokeh.io import show, curdoc
 from bokeh.layouts import column, row
-from bokeh.models import ColumnDataSource, HoverTool, Select, MultiSelect, Slider, RangeSlider, RadioGroup, Legend
+from bokeh.models import ColumnDataSource, HoverTool, Select, MultiSelect, Slider, RangeSlider, RadioGroup, Legend, \
+    TapTool, CustomJS
 from bokeh.models.ui.dialogs import Button
 from bokeh.plotting import figure
 from bokeh.transform import factor_cmap
@@ -75,8 +78,8 @@ brand_mapper = factor_cmap(field_name='brand', factors=list(brand_colors.keys())
 Figure2D = figure(x_axis_label="Battery capacity", y_axis_label="Price")
 
 # Add circles with data from the ColumnDataSource
-Figure2D.circle(x='x', y='y', size=10, source=sourceCircles, color=brand_mapper, line_color ='black')#, legend_field='brand')
-Figure2D.square_pin(x='x', y='y', size=13, source=sourceStars,   color=brand_mapper, line_color ='black')#, legend_field='brand')
+circles = Figure2D.circle(x='x', y='y', size=10, source=sourceCircles, color=brand_mapper, line_color ='black')#, legend_field='brand')
+squares = Figure2D.square_pin(x='x', y='y', size=13, source=sourceStars,   color=brand_mapper, line_color ='black')#, legend_field='brand')
 
 
 #TODO add legend
@@ -151,7 +154,6 @@ for control in controls:
 
 selectboxes = [choose_fast_charging]
 choose_fast_charging.on_change('active', lambda attr, old, new: updateFigure2D())
-
 
 controlsExport = controls + selectboxes
 exploreViewModels = column(column(controlsExport), Figure2D, width = 1200)
