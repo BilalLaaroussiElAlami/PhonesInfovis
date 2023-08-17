@@ -6,32 +6,36 @@ from bokeh.models import MultiSelect, ColumnDataSource
 from bokeh.plotting import figure
 
 
-df = pd.read_csv('smartphones.csv')
+smartPhonesDF = pd.read_csv('smartphones.csv')
+numerical_columns = smartPhonesDF.select_dtypes(include=['number'])
+# Group by 'brand' and calculate the averages for numerical columns
+smartphones_brand_averages_df = numerical_columns.groupby(smartPhonesDF['brand_name']).mean().reset_index()
+
 
 initial_attribute = 'price'
-initial_models = ['Apple iPhone 11', 'Apple iPhone 14', 'Google Pixel 2 XL', 'Samsung Galaxy S23 Plus']
+initial_brands = ['apple', 'samsung', 'huawei']
 
 
-def get_value_attribute(model, attribute):
-    print("🤔  model: ", model, " attribute: ", attribute)
-    return df.loc[df['model'] == model, attribute].values[0]
+def get_value_attribute(brand, attribute):
+    print("🤔  brand:", brand ," attribute:",attribute)
+    return smartphones_brand_averages_df.loc[smartphones_brand_averages_df['brand_name'] == brand, attribute].values[0]
 
-def get_values_multiple_models_one_attribute(models, attribute):
-    return list(map(lambda model: get_value_attribute(model, attribute), models))
+def get_values_multiple_brands_one_attribute(brands, attribute):
+    return list(map(lambda model: get_value_attribute(model, attribute), brands))
 
-def create_barchart(models,attribute):
+def create_barchart(brands, attribute):
     source = ColumnDataSource(
-        data=dict(models=models,
-                  values=get_values_multiple_models_one_attribute(models, attribute)))
-    barchart = figure(x_range=models, height=350, title=f"comparing {attribute}",
+        data=dict(models=brands,
+                  values=get_values_multiple_brands_one_attribute(brands, attribute)))
+    barchart = figure(x_range=brands, height=350, title=f"comparing {attribute}",
                       toolbar_location=None, tools="")
     barchart.vbar(x='models', top='values', source=source, width=0.4)
     barchart.xgrid.grid_line_color = None
     barchart.y_range.start = 0
     return barchart
 
-barchart = create_barchart(initial_models, initial_attribute)
-# will be called when selectinf models or attributes to see/compare
+barchart = create_barchart(initial_brands, initial_attribute)
+# will be called when selecting brands or attributes to see/compare
 def multi_select_callback(attr, old, new):
     user_selected_models = multi_select_models.value
     print("🙏  user_selected_models", user_selected_models)
@@ -50,19 +54,18 @@ def update_barcharts(llayout, barcharts):
     llayout.children[1].children[1] = row(barcharts)
 
 #INTERACTION WIDGETS
-optionsModels = df['model'].unique().tolist()
-multi_select_models = MultiSelect(title="select model(s)::", value=["Apple iPhone 11"], options=optionsModels,
-                                  height=200)
+optionsBrands = smartphones_brand_averages_df['brand_name'].unique().tolist()
+multi_select_models = MultiSelect(title="select brand(s)::", value=["apple"], options=optionsBrands,
+                                         height=200)
 multi_select_models.on_change('value', multi_select_callback)
 
+
 # Allow user to select multiple attributes to be compared
-optionsAttributes = df.columns.tolist()
+optionsAttributes = smartphones_brand_averages_df.columns.tolist()
 multi_select_attributes = MultiSelect(title="Select attributes:", value=["price"], options=optionsAttributes,
                                       height=200)
 multi_select_attributes.on_change('value', multi_select_callback)
-
 layout = None
-
 #This module would needs to have acces to the layout because it will modify it!
 def getLayout(llayout):
     global layout

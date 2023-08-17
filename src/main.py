@@ -4,7 +4,7 @@ from bokeh.models import ColumnDataSource, HTMLTemplateFormatter
 from bokeh.plotting import figure
 from bokeh.themes import Theme
 
-from compare import multi_select_models, multi_select_attributes, barchart, getLayout
+from compareByBrand import multi_select_models, multi_select_attributes, barchart, getLayout
 from exploreByBrand import x_axis_choose, y_axis_choose, Figure2D, price_slider_filter, controlsExport, brand_select
 
 exploreElements = column(column(controlsExport), Figure2D, width = 1200)

@@ -5,11 +5,11 @@ from bokeh.transform import factor_cmap
 
 
 # maka a dataframe from the csv file
-smartphones_brand_averages_df = pd.read_csv('smartphones.csv')
+smartPhonesDF = pd.read_csv('smartphones.csv')
 
-numerical_columns = smartphones_brand_averages_df.select_dtypes(include=['number'])
+numerical_columns = smartPhonesDF.select_dtypes(include=['number'])
 # Group by 'brand' and calculate the averages for numerical columns
-smartphones_brand_averages_df = numerical_columns.groupby(smartphones_brand_averages_df['brand_name']).mean().reset_index()
+smartphones_brand_averages_df = numerical_columns.groupby(smartPhonesDF['brand_name']).mean().reset_index()
 
 attribute_map = {
     "Brand": "brand_name",
@@ -125,7 +125,6 @@ def updateSource(selection, x_name, y_name):
     sourceStars.data = dict(
         x=selectionGoodRating[x_name],
         y=selectionGoodRating[y_name],
-
         brand=selectionGoodRating['brand_name'],
         rating = selectionGoodRating['avg_rating']
     )
@@ -150,7 +149,7 @@ controlsExport = controls + selectboxes
 
 # Customize the HoverTool to display the model information
 hover = HoverTool()
-hover.tooltips = [("Rating", "@rating")]
+hover.tooltips = [("Brand","@brand"), ("Rating", "@rating")]
 Figure2D.add_tools(hover)
 
 
