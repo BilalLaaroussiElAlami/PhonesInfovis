@@ -1,4 +1,5 @@
 import pandas as pd
+from bokeh.layouts import column
 from bokeh.models import ColumnDataSource, HoverTool, Select, MultiSelect, Slider, RangeSlider, RadioGroup
 from bokeh.plotting import figure
 from bokeh.transform import factor_cmap
@@ -42,8 +43,6 @@ price_slider_filter = Slider(title="maximum price", start=100, end=5000, value=5
 screen_size_bounds = RangeSlider(start=0, end=15, value=(0, 15), step=1, title="screen size bounds (inclusive)")
 brand_select = MultiSelect(title="Brands", options= ['ALL'] + smartphones_brand_averages_df['brand_name'].unique().tolist(), value= ["ALL"], height = 100, width = 300)
 choose_fast_charging = RadioGroup(labels=["No", "Yes", "Any"], active=2)
-group_by_brand = RadioGroup(labels=["Yes", "No"], active=1)
-
 
 ratingThreshold = 8.0
 #make 2 dataframes the first dataframe for all rows where the rating is less than 8 and another where the rating is greater than 8
@@ -140,17 +139,18 @@ controls = [x_axis_choose, y_axis_choose, price_slider_filter, screen_size_bound
 for control in controls:
     control.on_change('value', lambda attr, old, new: updateFigure2D())
 
-selectboxes = [choose_fast_charging, group_by_brand]
+selectboxes = [choose_fast_charging]
 for selectbox in selectboxes:
     selectbox.on_change('active', lambda attr, old, new: updateFigure2D())
 
 controlsExport = controls + selectboxes
 
-
 # Customize the HoverTool to display the model information
 hover = HoverTool()
 hover.tooltips = [("Brand","@brand"), ("Rating", "@rating")]
 Figure2D.add_tools(hover)
+
+exploreViewBrand = column(column(controlsExport), Figure2D, width = 1200)
 
 
 

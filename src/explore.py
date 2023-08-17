@@ -45,7 +45,6 @@ price_slider_filter = Slider(title="maximum price", start=100, end=5000, value=5
 screen_size_bounds = RangeSlider(start=0, end=15, value=(0, 15), step=1, title="screen size bounds (inclusive)")
 brand_select = MultiSelect(title="Brands", options= ['ALL'] + smartPhonesDF['brand_name'].unique().tolist(), value= ["ALL"], height = 100, width = 300)
 choose_fast_charging = RadioGroup(labels=["No", "Yes", "Any"], active=2)
-group_by_brand = RadioGroup(labels=["Yes", "No"], active=1)
 
 
 ratingThreshold = 8.0
@@ -91,6 +90,8 @@ Figure2D.legend.background_fill_alpha = 0.7
 Figure2D.legend.label_standoff = 8
 """
 
+
+
 def select_smartphones():
     max_price = price_slider_filter.value * 100 # convert to cents
     minimum_screen_size = screen_size_bounds.value[0]
@@ -107,23 +108,6 @@ def select_smartphones():
         selected = selected[selected['brand_name'].isin(brand_select.value)]
     #print("☢️ selected: ", selected.head(10))
     return selected
-
-def updateFigure2D():
-    print("updated")
-    x_name = attribute_map[x_axis_choose.value]
-    y_name = attribute_map[y_axis_choose.value]
-
-    Figure2D.xaxis.axis_label = x_axis_choose.value
-    Figure2D.yaxis.axis_label = y_axis_choose.value
-    selected_smartphones = select_smartphones()
-    Figure2D.title.text = f"{len(selected_smartphones)} smartphones"
-    """sourceFigure2D.data = dict(
-        x=selected_smartphones[x_name],
-        y=selected_smartphones[y_name],
-        model=selected_smartphones['model'],
-        brand=selected_smartphones['brand_name']
-    )"""
-    updateSource(selected_smartphones, x_name, y_name)
 
 def updateSource(selection, x_name, y_name):
     selectionGoodRating = selection[selection['avg_rating'] >= ratingThreshold]
@@ -143,16 +127,34 @@ def updateSource(selection, x_name, y_name):
         rating = selectionNormalRating['avg_rating']
     )
 
+def updateFigure2D():
+    print("updated")
+    x_name = attribute_map[x_axis_choose.value]
+    y_name = attribute_map[y_axis_choose.value]
+
+    Figure2D.xaxis.axis_label = x_axis_choose.value
+    Figure2D.yaxis.axis_label = y_axis_choose.value
+    selected_smartphones = select_smartphones()
+    Figure2D.title.text = f"{len(selected_smartphones)} smartphones"
+    """sourceFigure2D.data = dict(
+        x=selected_smartphones[x_name],
+        y=selected_smartphones[y_name],
+        model=selected_smartphones['model'],
+        brand=selected_smartphones['brand_name']
+    )"""
+    updateSource(selected_smartphones, x_name, y_name)
+
+
 controls = [x_axis_choose, y_axis_choose, price_slider_filter, screen_size_bounds, brand_select]
 for control in controls:
     control.on_change('value', lambda attr, old, new: updateFigure2D())
 
-selectboxes = [choose_fast_charging, group_by_brand]
-for selectbox in selectboxes:
-    selectbox.on_change('active', lambda attr, old, new: updateFigure2D())
+selectboxes = [choose_fast_charging]
+choose_fast_charging.on_change('active', lambda attr, old, new: updateFigure2D())
+
 
 controlsExport = controls + selectboxes
-
+exploreViewModels = column(column(controlsExport), Figure2D, width = 1200)
 
 # Customize the HoverTool to display the model information
 hover = HoverTool()

@@ -44,10 +44,14 @@ def multi_select_callback(attr, old, new):
         update_barcharts(layout, new_barcharts)
 
 def update_barchart(llayout, nnewbarchart):
-    llayout.children[1].children[1] = nnewbarchart
+    compareViewModels.children[1] = nnewbarchart
+    llayout.children[1].children[1] = compareViewModels
+
 
 def update_barcharts(llayout, barcharts):
-    llayout.children[1].children[1] = row(barcharts)
+    compareViewModels.children[1]  = row(barcharts)
+    llayout.children[1].children[1] = compareViewModels
+
 
 #INTERACTION WIDGETS
 optionsModels = df['model'].unique().tolist()
@@ -61,10 +65,12 @@ multi_select_attributes = MultiSelect(title="Select attributes:", value=["price"
                                       height=200)
 multi_select_attributes.on_change('value', multi_select_callback)
 
+compareViewModels = column(row(multi_select_models, multi_select_attributes), barchart, width = 1200)
+
 layout = None
 
 #This module would needs to have acces to the layout because it will modify it!
-def getLayout(llayout):
+def getLayoutForCompare(llayout):
     global layout
     layout = llayout
 

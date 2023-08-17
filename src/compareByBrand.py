@@ -48,10 +48,15 @@ def multi_select_callback(attr, old, new):
         update_barcharts(layout, new_barcharts)
 
 def update_barchart(llayout, nnewbarchart):
-    llayout.children[1].children[1] = nnewbarchart
+    compareViewBrand.children[1] = nnewbarchart
+    llayout.children[1].children[1] = compareViewBrand
+
 
 def update_barcharts(llayout, barcharts):
-    llayout.children[1].children[1] = row(barcharts)
+    compareViewBrand.children[1]  = row(barcharts)
+    llayout.children[1].children[1] = compareViewBrand
+
+
 
 #INTERACTION WIDGETS
 optionsBrands = smartphones_brand_averages_df['brand_name'].unique().tolist()
@@ -67,8 +72,11 @@ multi_select_attributes = MultiSelect(title="Select attributes:", value=["price"
 multi_select_attributes.on_change('value', multi_select_callback)
 layout = None
 #This module would needs to have acces to the layout because it will modify it!
-def getLayout(llayout):
+def getLayoutForCompareByBrand(llayout):
     global layout
     layout = llayout
+
+compareViewBrand = column(row(multi_select_models, multi_select_attributes), barchart, width = 1200)
+
 
 
