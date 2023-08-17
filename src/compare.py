@@ -35,6 +35,7 @@ barchart = create_barchart(initial_models, initial_attribute)
 
 
 def create_data_table(models, attributes):
+    print("🔔 models ", models)
     filtered_data = df[df['model'].isin(models)]
     source = ColumnDataSource(filtered_data)
     column_width = 190
@@ -43,7 +44,7 @@ def create_data_table(models, attributes):
     row_height = 25  # Adjust this value as needed
     n_rows = len(models)
     table_height = n_rows * row_height
-    data_table = DataTable(source=source, columns=columns, width=column_width * (len(attributes) + 1), height = table_height)
+    data_table = DataTable(source=source, columns=columns, width=column_width * (len(attributes) + 1), height = table_height + row_height)
     return data_table
 datatable = create_data_table(initial_models, [initial_attribute])
 
