@@ -1,8 +1,8 @@
 # Allow user to select multiple models they wish to compare
 import pandas as pd
-from bokeh.io import curdoc
+from bokeh.io import curdoc, show
 from bokeh.layouts import column, row
-from bokeh.models import MultiSelect, ColumnDataSource
+from bokeh.models import MultiSelect, ColumnDataSource, Div
 from bokeh.plotting import figure
 
 
@@ -36,6 +36,22 @@ def create_barchart(brands, attribute):
 
 barchart = create_barchart(initial_brands, initial_attribute)
 # will be called when selecting brands or attributes to see/compare
+def create_data_table(models, attributes):
+    data = pd.read_csv('smartphones.csv')
+    filtered_data = data[data['model'].isin(models)]
+    html = '<table>'
+    for index, row in filtered_data.iterrows():
+        html += '<tr>'
+        for attr in ['model'] + attributes:
+            html += f'<td> {row[attr]}</td>'
+        html += '</tr>'
+    html += '</table>'
+    return Div(text = html)
+
+data_table = create_data_table(initial_brands, [initial_attribute])
+show(data_table)
+
+
 def multi_select_callback(attr, old, new):
     user_selected_models = multi_select_models.value
     print("🙏  user_selected_models", user_selected_models)
@@ -46,6 +62,7 @@ def multi_select_callback(attr, old, new):
     if(len(user_selected_attributes) > 1):
         new_barcharts = list(map(lambda attribute: create_barchart(user_selected_models, attribute), user_selected_attributes))
         update_barcharts(layout, new_barcharts)
+    update_data_table(layout, create_data_table(user_selected_models, user_selected_attributes))
 
 def update_barchart(llayout, nnewbarchart):
     compareViewBrand.children[1] = nnewbarchart
@@ -56,6 +73,9 @@ def update_barcharts(llayout, barcharts):
     compareViewBrand.children[1]  = row(barcharts)
     llayout.children[1].children[1] = compareViewBrand
 
+def update_data_table(llayout, data_table):
+    compareViewBrand.children[0].children[1] = data_table
+    llayout.children[1].children[1] = compareViewBrand
 
 
 #INTERACTION WIDGETS
@@ -76,7 +96,7 @@ def getLayoutForCompareByBrand(llayout):
     global layout
     layout = llayout
 
-compareViewBrand = column(row(multi_select_models, multi_select_attributes), barchart, width = 1200)
+compareViewBrand = column(column(row(multi_select_models, multi_select_attributes), data_table), barchart, width = 1200)
 
 
 
