@@ -9,8 +9,7 @@ from bokeh.transform import factor_cmap
 
 # maka a dataframe from the csv file
 smartPhonesDF = pd.read_csv('smartphones.csv')
-# print the brands of the phones
-#print(df['brand_name'].unique())
+smartPhonesDF['price'] = smartPhonesDF['price']/100
 
 attribute_map = {
     "Brand": "brand_name",
@@ -93,7 +92,7 @@ Figure2D.legend.label_standoff = 8
 
 
 def select_smartphones():
-    max_price = price_slider_filter.value * 100 # convert to cents
+    max_price = price_slider_filter.value
     minimum_screen_size = screen_size_bounds.value[0]
     maximum_screen_size = screen_size_bounds.value[1]
     want_fast_charging = choose_fast_charging.active #0 is no, 1 is yes, 3 doesnt matter

@@ -8,6 +8,9 @@ from bokeh.plotting import figure
 
 df = pd.read_csv('smartphones.csv')
 
+#transform df so the price column is expressed in dollars by dividing by 100
+df['price'] = df['price']/100
+
 initial_attribute = 'price'
 initial_models = ['Apple iPhone 11', 'Apple iPhone 14', 'Google Pixel 2 XL', 'Samsung Galaxy S23 Plus']
 
@@ -30,8 +33,7 @@ def create_barchart(models,attribute):
     return barchart
 
 def create_data_table(models, attributes):
-    data = pd.read_csv('smartphones.csv')
-    filtered_data = data[data['model'].isin(models)]
+    filtered_data = df[df['model'].isin(models)]
     html = '<table>'
     # Create the header row
     html += '<tr>'

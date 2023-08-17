@@ -7,6 +7,7 @@ from bokeh.plotting import figure
 
 
 smartPhonesDF = pd.read_csv('smartphones.csv')
+smartPhonesDF['price'] = smartPhonesDF['price']/100
 numerical_columns = smartPhonesDF.select_dtypes(include=['number'])
 # Group by 'brand' and calculate the averages for numerical columns
 smartphones_brand_averages_df = numerical_columns.groupby(smartPhonesDF['brand_name']).mean().reset_index()
@@ -69,7 +70,7 @@ def multi_select_callback(attr, old, new):
     if(len(user_selected_attributes) > 1):
         new_barcharts = list(map(lambda attribute: create_barchart(user_selected_models, attribute), user_selected_attributes))
         update_barcharts(layout, new_barcharts)
-    update_data_table(layout, create_data_table(user_selected_models, user_selected_attributes))
+    #update_data_table(layout, create_data_table(user_selected_models, user_selected_attributes))
 
 def update_barchart(llayout, nnewbarchart):
     compareViewBrand.children[1] = nnewbarchart
@@ -103,7 +104,7 @@ def getLayoutForCompareByBrand(llayout):
     global layout
     layout = llayout
 
-compareViewBrand = column(column(row(multi_select_models, multi_select_attributes), data_table, barchart, width = 1200))
+compareViewBrand = column(column(row(multi_select_models, multi_select_attributes), data_table), barchart, width = 1200)
 
 
 
