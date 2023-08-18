@@ -65,13 +65,13 @@ def multi_select_callback(attr, old, new):
         new_barcharts = list(map(lambda attribute: create_barchart(user_selected_models, attribute), user_selected_attributes))
         update_barcharts(layout, new_barcharts)
     update_data_table(layout, create_data_table(user_selected_models, user_selected_attributes))
-    if(len(user_selected_models) == 2 and len(user_selected_attributes) > 2):
+    """if(len(user_selected_models) == 2 and len(user_selected_attributes) > 2):
         print( " ✅ ")
         radarPlot = create_radar_plot(
             get_values_multiple_attributes_one_model( multi_select_models.value[0], user_selected_attributes),  multi_select_models.value[0],
             get_values_multiple_attributes_one_model(multi_select_models.value[1], user_selected_attributes),  multi_select_models.value[1],
             user_selected_attributes)
-        update_radarplot(layout, radarPlot)
+        update_radarplot(layout, radarPlot)"""
 
 
 def update_barchart(llayout, nnewbarchart):
@@ -87,9 +87,11 @@ def update_data_table(llayout, data_table):
     compareViewModels.children[0].children[1] = data_table
     llayout.children[1].children[1] = compareViewModels
 
+"""
 def update_radarplot(llayout, radarplot):
     compareViewModels.children[0].children[2] = radarplot
     llayout.children[1].children[1] = compareViewModels
+"""
 
 #INTERACTION WIDGETS
 optionsModels = df['model'].unique().tolist()
@@ -103,7 +105,7 @@ multi_select_attributes = MultiSelect(title="Select attributes:", value=["price"
                                       height=200)
 multi_select_attributes.on_change('value', multi_select_callback)
 
-compareViewModels = column(column(row(multi_select_models, multi_select_attributes), datatable, Div()), barchart, width = 1200)
+compareViewModels = column(column(row(multi_select_models, multi_select_attributes), datatable), barchart, width = 1200)
 
 layout = None
 

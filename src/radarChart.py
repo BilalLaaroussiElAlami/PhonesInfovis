@@ -1,9 +1,8 @@
 #reference: https://vecco-insight.gitbook.io/crash-visualization/plotly/6.3-statistical-charts/6.3.3-radar-chart
 
+
 import plotly.express as px
 import pandas as pd
-
-
 
 #get the maximum values of each attribute of smartphones.csv associated with
 def getMaxVals():
@@ -13,9 +12,6 @@ def getMaxVals():
     df = df.select_dtypes(include=['int64', 'float64', 'int32', 'float32', 'int', 'float', 'number'])
     maxVals = df.max()
     return maxVals
-
-maxvals = getMaxVals()
-print(maxvals['battery_capacity'])
 
 def create_radar_plot(valsA, nameA, valsB, nameB, labels):
     #normalize valsA and valsB
@@ -41,13 +37,10 @@ def create_radar_plot(valsA, nameA, valsB, nameB, labels):
 
 
 
-
+""""
 #example usage of function radarplots
 X =  create_radar_plot([100, 5.8, 4], "YUU", [300, 6.6, 3], "YUUKES", ['price', 'avg_rating', 'num_cores'])
 X.show()
+"""
 
-#get the maximum avg_rating of smartphones.csv
-df = pd.read_csv('smartphones.csv')
-df = df.select_dtypes(include=['int64', 'float64', 'int32', 'float32', 'int', 'float', 'number'])
-maxAvgRating = df['avg_rating'].max()
-print(maxAvgRating)
+
