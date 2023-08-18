@@ -6,7 +6,7 @@ from bokeh.models import MultiSelect, ColumnDataSource, Div
 from bokeh.plotting import figure
 
 
-smartPhonesDF = pd.read_csv('smartphones.csv')
+smartPhonesDF = pd.read_csv('../smartphones.csv')
 smartPhonesDF['price'] = smartPhonesDF['price']/100
 numerical_columns = smartPhonesDF.select_dtypes(include=['number'])
 # Group by 'brand' and calculate the averages for numerical columns

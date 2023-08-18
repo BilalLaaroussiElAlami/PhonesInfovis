@@ -3,7 +3,7 @@ from bokeh.io import show
 from bokeh.layouts import column, row
 from bokeh.models import CheckboxGroup, Checkbox, RadioGroup, Div, ColumnDataSource
 
-smartPhonesDF = pd.read_csv('smartphones.csv')
+smartPhonesDF = pd.read_csv('../smartphones.csv')
 
 #select the rows where the price is lower than 1000
 smartPhonesDFFilterPrice = smartPhonesDF[smartPhonesDF['price'] < 10000]

@@ -1,6 +1,6 @@
 import pandas as pd
 
-smartphonesDF = pd.read_csv('smartphones.csv')
+smartphonesDF = pd.read_csv('../smartphones.csv')
 pd.set_option('display.max_columns', None)
 smartphonesDF.fillna(0, inplace=True)  # just replace missing values with zero
 smartphonesDF['price'] = smartphonesDF['price'] / 100    #convert price from cents to dollars
