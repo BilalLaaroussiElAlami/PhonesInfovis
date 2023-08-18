@@ -11,10 +11,10 @@ categorical_columns_that_are_encoded_as_numbers = ['extended_memory_available','
 numerical_columns = numerical_columns_all.drop(categorical_columns_that_are_encoded_as_numbers)
 categorical_columns = categorical_columns.append(pd.Index(categorical_columns_that_are_encoded_as_numbers))
 
-print("categorical columns\n")
-print(categorical_columns.values)
-print("numercial columns\n")
-print(numerical_columns.values)
+#print("categorical columns\n")
+#print(categorical_columns.values)
+#print("numercial columns\n")
+#print(numerical_columns.values)
 
 #get the maximum and minimum values for each numerical column
 numerical_columns_max_min = {col: (smartphonesDF[col].max(), smartphonesDF[col].min()) for col in numerical_columns}

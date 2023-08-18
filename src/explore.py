@@ -126,6 +126,7 @@ def updateFigure2D():
     Figure2D.yaxis.axis_label = y_axis_choose.value
     Figure2D.y_range.start = 0
     Figure2D.y_range.end = getMaxValue(y_name)*1.1
+    print( " 🔔 ", getMaxValue(y_name)*1.1)
     Figure2D.x_range.start = 0
     Figure2D.x_range.end = getMaxValue(x_name)*1.1
 
