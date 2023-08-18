@@ -45,7 +45,6 @@ choose_fast_charging = RadioGroup(labels=["No", "Yes", "Any"], active=2)
 ui_choice_fast_charging = column(Div(text= " <b>Fast charging? </b>"), choose_fast_charging)
 
 
-
 ratingThreshold = 8.0
 #make 2 dataframes the first dataframe for all rows where the rating is less than 8 and another where the rating is greater than 8
 smartphonesDFExcellentRating = smartphonesDF[smartphonesDF['avg_rating'] >= ratingThreshold]
@@ -151,7 +150,7 @@ choose_fast_charging.on_change('active', lambda attr, old, new: updateFigure2D()
 
 
 controlsExport = controls + [ui_choice_fast_charging]
-exploreViewModels = column(column(controlsExport), Figure2D, width = 1200)
+exploreViewModels = row(column(controlsExport), Figure2D, width = 1000)
 
 # Customize the HoverTool to display the model information
 hover = HoverTool()
