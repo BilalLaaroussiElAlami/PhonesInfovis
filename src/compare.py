@@ -1,11 +1,6 @@
-# Allow user to select multiple models they wish to compare
-import pandas as pd
-from bokeh.io import curdoc
 from bokeh.layouts import column, row
 from bokeh.models import MultiSelect, ColumnDataSource, Div
 from bokeh.plotting import figure
-
-from radarChart import create_radar_plot
 from preprocessing import smartphonesDF
 
 initial_attribute = 'price'
@@ -73,7 +68,6 @@ def multi_select_callback(attr, old, new):
 def update_barchart(llayout, nnewbarchart):
     compareViewModels.children[1] = nnewbarchart
     llayout.children[1].children[1] = compareViewModels
-
 
 def update_barcharts(llayout, barcharts):
     compareViewModels.children[1]  = column(barcharts)

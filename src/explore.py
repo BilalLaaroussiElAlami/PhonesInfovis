@@ -1,11 +1,7 @@
-import pandas as pd
-from bokeh.io import show, curdoc
 from bokeh.layouts import column, row
 from bokeh.models import ColumnDataSource, HoverTool, Select, MultiSelect, Slider, RangeSlider, RadioGroup, Legend, Div
-from bokeh.models.ui.dialogs import Button
 from bokeh.plotting import figure
 from bokeh.transform import factor_cmap
-
 from preprocessing import smartphonesDF, getMaxValue, numerical_columns
 from legend import legendDiv
 

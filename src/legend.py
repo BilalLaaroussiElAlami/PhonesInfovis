@@ -1,7 +1,6 @@
-from bokeh.plotting import show, figure
 from bokeh.models import Div
 
-# HTML code for the circle and text
+
 html_code = """
 <html lang="en">
 <head>
