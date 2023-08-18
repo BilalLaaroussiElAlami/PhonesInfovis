@@ -6,11 +6,11 @@ from compareByBrand import compareViewBrand
 from explore import exploreViewModels
 from exploreByBrand import exploreViewBrand
 
-group_by_brand = RadioGroup(labels=["Yes", "No"], active=0)
+group_by_brand = RadioGroup(labels=["Yes", "No"], active=1)
 ui_group_by_brand = column(Div(text= "<b>Group by brand?</b>"), group_by_brand)
 def updateView():
     print("🤔  group_by_brand", group_by_brand.active)
-    if(group_by_brand.active == 0):
+    if(group_by_brand.active == 1):
         layout.children[1].children[0] = exploreViewModels
         layout.children[1].children[1] = compareViewModels
     else:

@@ -5,10 +5,10 @@ pd.set_option('display.max_columns', None)
 smartphonesDF.fillna(0, inplace=True)  # just replace missing values with zero
 smartphonesDF['price'] = smartphonesDF['price'] / 100     #convert from cents to dollars
 
-numerical_columns   = smartphonesDF.select_dtypes(include=['int64', 'float64', 'int32', 'float32', 'int', 'float', 'number']).columns
+numerical_columns_all   = smartphonesDF.select_dtypes(include=['int64', 'float64', 'int32', 'float32', 'int', 'float', 'number']).columns
 categorical_columns = smartphonesDF.select_dtypes(include=['object']).columns
 categorical_columns_that_are_encoded_as_numbers = ['extended_memory_available','fast_charging_available', '5G_or_not']
-numerical_columns = numerical_columns.drop(categorical_columns_that_are_encoded_as_numbers)
+numerical_columns = numerical_columns_all.drop(categorical_columns_that_are_encoded_as_numbers)
 categorical_columns = categorical_columns.append(pd.Index(categorical_columns_that_are_encoded_as_numbers))
 
 print("categorical columns\n")

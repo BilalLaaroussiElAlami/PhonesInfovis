@@ -7,6 +7,7 @@ from bokeh.plotting import figure
 from bokeh.transform import factor_cmap
 
 from preprocessing import smartphonesDF, getMaxValue, numerical_columns
+from legend import legendDiv
 
 attribute_map = {
     "Brand": "brand_name",
@@ -19,15 +20,14 @@ attribute_map = {
     "Processor Speed": "processor_speed",
     "Battery Capacity": "battery_capacity",
     "Fast Charging Available": "fast_charging_available",
-    "Fast Charging": "fast_charging",
     "RAM Capacity": "ram_capacity",
     "Internal Memory": "internal_memory",
     "Screen Size": "screen_size",
     "Refresh Rate": "refresh_rate",
     "Number of Rear Cameras": "num_rear_cameras",
     "Operating System": "os",
-    "Primary Rear Camera": "primary_camera_rear",
-    "Primary Front Camera": "primary_camera_front",
+    "Primary Rear Camera Quality": "primary_camera_rear",
+    "Primary Front Camera Quality": "primary_camera_front",
     "Extended Memory Available": "extended_memory_available",
     "Resolution Height": "resolution_height",
     "Resolution Width": "resolution_width",
@@ -39,10 +39,15 @@ attribute_map =  dict(filter(lambda item: item[1] in numerical_columns, attribut
 x_axis_choose = Select(title="X Axis", options=sorted(attribute_map.keys()), value="Battery Capacity")
 y_axis_choose = Select(title="Y Axis", options=sorted(attribute_map.keys()), value="Price")
 price_slider_filter = Slider(title="maximum price", start=100, end=5000, value=5000, step=1)
-screen_size_bounds = RangeSlider(start=0, end=15, value=(0, 15), step=1, title="screen size bounds (inclusive)")
+screen_size_bounds = RangeSlider(start=0, end=15, value=(0, 15), step=0.1, title="screen size bounds (inclusive)")
 brand_select = MultiSelect(title="Brands", options= ['ALL'] + smartphonesDF['brand_name'].unique().tolist(), value= ["ALL"], height = 100, width = 300)
 choose_fast_charging = RadioGroup(labels=["No", "Yes", "Any"], active=2)
-ui_choice_fast_charging = column(Div(text= " <b>Fast charging? </b>"), choose_fast_charging)
+choose_extended_memory_available = RadioGroup(labels=["No", "Yes", "Any"], active=2)
+choose_5G_or_not = RadioGroup(labels=["No", "Yes", "Any"], active=2)
+
+ui_choice_fast_charging = column(Div(text= " <b>Fast charging</b>"), choose_fast_charging)
+ui_choice_extended_memory = column(Div(text= " <b>Extended memory</b>"), choose_extended_memory_available)
+ui_choice_5G_or_not = column(Div(text= " <b>5G support</b>"), choose_5G_or_not)
 
 
 ratingThreshold = 8.0
@@ -68,25 +73,14 @@ sourceCircles = ColumnDataSource(data=dict(
 
 
 # Define the colors for each brand
-brand_colors = {'samsung': 'cyan', 'apple': 'orange', 'huawei': 'green', 'oppo': 'purple', 'xiaomi': 'pink', 'vivo': 'red', 'realme': 'blue', 'oneplus': 'yellow', 'nokia': 'brown', 'sony': 'grey', 'google': 'black'}
+brand_colors = {'samsung': 'cyan', 'apple': 'orange', 'huawei': 'green', 'oppo': 'purple', 'xiaomi': 'pink', 'vivo': 'red', 'realme': 'blue', 'oneplus': 'yellow', 'nokia': 'brown'}
 brand_mapper = factor_cmap(field_name='brand', factors=list(brand_colors.keys()), palette=list(brand_colors.values()))
 Figure2D = figure(x_axis_label="Battery capacity", y_axis_label="Price")
 
 # Add circles with data from the ColumnDataSource
-Figure2D.circle(x='x', y='y', size=10, source=sourceCircles, color=brand_mapper, line_color ='black')#, legend_field='brand')
-Figure2D.square_pin(x='x', y='y', size=13, source=sourceStars,   color=brand_mapper, line_color ='black')#, legend_field='brand')
+Figure2D.circle(x='x', y='y', size=10, source=sourceCircles, color=brand_mapper, line_color ='black')
+Figure2D.square_pin(x='x', y='y', size=13, source=sourceStars,   color=brand_mapper, line_color ='black')
 
-
-#TODO add legend
-"""
-# Show the legend
-Figure2D.legend.title = 'Brand'
-Figure2D.legend.label_text_font_size = '10pt'
-
-# Customize the legend items' appearance
-Figure2D.legend.background_fill_alpha = 0.7
-Figure2D.legend.label_standoff = 8
-"""
 
 
 
@@ -95,6 +89,8 @@ def select_smartphones():
     minimum_screen_size = screen_size_bounds.value[0]
     maximum_screen_size = screen_size_bounds.value[1]
     want_fast_charging = choose_fast_charging.active #0 is no, 1 is yes, 3 doesnt matter
+    want_extended_memory_available = choose_extended_memory_available.active #0 is no, 1 is yes, 3 doesnt matter
+    want_5G_or_not = choose_5G_or_not.active #0 is no, 1 is yes, 3 doesnt matter
     selected = smartphonesDF[
         (smartphonesDF['price'] <= max_price)
         & (smartphonesDF['screen_size'] >= minimum_screen_size)
@@ -102,9 +98,13 @@ def select_smartphones():
     ]
     if(want_fast_charging != 2):
         selected = selected[selected['fast_charging_available'] == want_fast_charging]
+    if(want_extended_memory_available != 2):
+        selected = selected[selected['extended_memory_available'] == want_extended_memory_available]
+    if(want_5G_or_not != 2):
+        selected = selected[selected['5G_or_not'] == want_5G_or_not]
+
     if('ALL' not in brand_select.value):
         selected = selected[selected['brand_name'].isin(brand_select.value)]
-    #print("☢️ selected: ", selected.head(10))
     return selected
 
 def updateSource(selection, x_name, y_name):
@@ -126,7 +126,6 @@ def updateSource(selection, x_name, y_name):
     )
 
 def updateFigure2D():
-    print("updated")
     x_name = attribute_map[x_axis_choose.value]
     y_name = attribute_map[y_axis_choose.value]
 
@@ -147,10 +146,12 @@ for control in controls:
     control.on_change('value', lambda attr, old, new: updateFigure2D())
 
 choose_fast_charging.on_change('active', lambda attr, old, new: updateFigure2D())
+choose_extended_memory_available.on_change('active', lambda attr, old, new: updateFigure2D())
+choose_5G_or_not.on_change('active', lambda attr, old, new: updateFigure2D())
 
 
-controlsExport = controls + [ui_choice_fast_charging]
-exploreViewModels = row(column(controlsExport), Figure2D, width = 1000)
+controlsExport = controls + [row(ui_choice_fast_charging, ui_choice_extended_memory, ui_choice_5G_or_not)]
+exploreViewModels = row(column(controlsExport), Figure2D, legendDiv, width = 1000)
 
 # Customize the HoverTool to display the model information
 hover = HoverTool()

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Bokeh Plot</title>
+    <style>
+      html, body {
+        box-sizing: border-box;
+        display: flow-root;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-3.2.2.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.2.2.min.js"></script>
+    <script type="text/javascript">
+        Bokeh.set_log_level("info");
+    </script>
+  </head>
+  <body>
+    <div id="ff7a23ee-7260-41aa-9296-75c792302435" data-root-id="p1001" style="display: contents;"></div>
+  
+    <script type="application/json" id="p1002">
+      {"1521fc75-516c-45d0-86d8-b787a0e5ecb4":{"version":"3.2.2","title":"Bokeh Application","roots":[{"type":"object","name":"Div","id":"p1001","attributes":{"text":"\n&lt;html lang=\"en\"&gt;\n&lt;head&gt;\n&lt;meta charset=\"UTF-8\"&gt;\n&lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"&gt;\n&lt;style&gt;\n  .legend {\n    font-family: Arial, sans-serif;\n    font-size: 14px;\n  }\n\n  .legend-item {\n    display: flex;\n    align-items: center;\n    margin-bottom: 10px;\n  }\n\n  .circle {\n    border-radius: 45%;\n  }\n\n  .square {\n    border-radius: 5px;\n  }\n\n  .color-box {\n    width: 20px;\n    height: 20px;\n    margin-right: 5px;\n  }\n\n&lt;/style&gt;\n&lt;/head&gt;\n&lt;body&gt;\n  &lt;div class=\"legend\"&gt;\n    &lt;div class=\"legend-item\"&gt;\n      &lt;div class=\"color-box circle\" style = \"background-color: gray;\"  &gt;&lt;/div&gt;\n      &lt;span&gt;Smartphone&lt;/span&gt;\n    &lt;/div&gt;\n    &lt;div class=\"legend-item\"&gt;\n      &lt;div class=\"color-box\" style = \"background-color: gray;\" &gt;&lt;/div&gt;\n      &lt;span&gt;Excellent Rating&lt;/span&gt;\n    &lt;/div&gt;\n    &lt;div class=\"legend-item\"&gt;\n      &lt;div class=\"color-box circle\" style=\"background-color: orange\"&gt;&lt;/div&gt;\n      &lt;span&gt;Apple&lt;/span&gt;\n    &lt;/div&gt;\n    &lt;div class=\"legend-item\"&gt;\n      &lt;div class=\"color-box circle\" style=\"background-color: cyan\"&gt;&lt;/div&gt;\n      &lt;span&gt;Samsung&lt;/span&gt;\n    &lt;/div&gt;\n    &lt;div class=\"legend-item\"&gt;\n      &lt;div class=\"color-box circle\" style=\"background-color: green\"&gt;&lt;/div&gt;\n      &lt;span&gt;Huawei&lt;/span&gt;\n    &lt;/div&gt;\n    &lt;div class=\"legend-item\"&gt;\n        &lt;div class=\"color-box circle\" style=\"background-color: purple\"&gt;&lt;/div&gt;\n        &lt;span&gt;Oppo&lt;/span&gt;\n      &lt;/div&gt;\n\n  &lt;/div&gt;\n&lt;/body&gt;\n&lt;/html&gt;\n"}}]}}
+    </script>
+    <script type="text/javascript">
+      (function() {
+        const fn = function() {
+          Bokeh.safely(function() {
+            (function(root) {
+              function embed_document(root) {
+              const docs_json = document.getElementById('p1002').textContent;
+              const render_items = [{"docid":"1521fc75-516c-45d0-86d8-b787a0e5ecb4","roots":{"p1001":"ff7a23ee-7260-41aa-9296-75c792302435"},"root_ids":["p1001"]}];
+              root.Bokeh.embed.embed_items(docs_json, render_items);
+              }
+              if (root.Bokeh !== undefined) {
+                embed_document(root);
+              } else {
+                let attempts = 0;
+                const timer = setInterval(function(root) {
+                  if (root.Bokeh !== undefined) {
+                    clearInterval(timer);
+                    embed_document(root);
+                  } else {
+                    attempts++;
+                    if (attempts > 100) {
+                      clearInterval(timer);
+                      console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+                    }
+                  }
+                }, 10, root)
+              }
+            })(window);
+          });
+        };
+        if (document.readyState != "loading") fn();
+        else document.addEventListener("DOMContentLoaded", fn);
+      })();
+    </script>
+  </body>
+</html>
