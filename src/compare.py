@@ -6,17 +6,13 @@ from bokeh.models import MultiSelect, ColumnDataSource, Div
 from bokeh.plotting import figure
 
 from radarChart import create_radar_plot
-
-df = pd.read_csv('smartphones.csv')
-
-#transform df so the price column is expressed in dollars by dividing by 100
-df['price'] = df['price']/100
+from preprocessing import smartphonesDF
 
 initial_attribute = 'price'
 initial_models = ['Apple iPhone 11', 'Apple iPhone 14', 'Google Pixel 2 XL', 'Samsung Galaxy S23 Plus']
 
 def get_value_attribute(model, attribute):
-    return df.loc[df['model'] == model, attribute].values[0]
+    return smartphonesDF.loc[smartphonesDF['model'] == model, attribute].values[0]
 def get_values_multiple_models_one_attribute(models, attribute):
     return list(map(lambda model: get_value_attribute(model, attribute), models))
 def get_values_multiple_attributes_one_model(model, attributes):
@@ -35,7 +31,7 @@ def create_barchart(models,attribute):
     return barchart
 
 def create_data_table(models, attributes):
-    filtered_data = df[df['model'].isin(models)]
+    filtered_data = smartphonesDF[smartphonesDF['model'].isin(models)]
     html = '<table>'
     # Create the header row
     html += '<tr>'
@@ -94,13 +90,13 @@ def update_radarplot(llayout, radarplot):
 """
 
 #INTERACTION WIDGETS
-optionsModels = df['model'].unique().tolist()
+optionsModels = smartphonesDF['model'].unique().tolist()
 multi_select_models = MultiSelect(title="select model(s)::", value=["Apple iPhone 11"], options=optionsModels,
                                   height=200)
 multi_select_models.on_change('value', multi_select_callback)
 
 # Allow user to select multiple attributes to be compared
-optionsAttributes = df.columns.tolist()
+optionsAttributes = smartphonesDF.columns.tolist()
 multi_select_attributes = MultiSelect(title="Select attributes:", value=["price"], options=optionsAttributes,
                                       height=200)
 multi_select_attributes.on_change('value', multi_select_callback)

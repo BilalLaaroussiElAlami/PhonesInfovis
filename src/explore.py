@@ -6,10 +6,7 @@ from bokeh.models.ui.dialogs import Button
 from bokeh.plotting import figure
 from bokeh.transform import factor_cmap
 
-
-# maka a dataframe from the csv file
-smartPhonesDF = pd.read_csv('smartphones.csv')
-smartPhonesDF['price'] = smartPhonesDF['price']/100
+from preprocessing import smartphonesDF, getMaxValue
 
 attribute_map = {
     "Brand": "brand_name",
@@ -40,16 +37,16 @@ attribute_map = {
 #INTERACTION WIDGETS
 x_axis_choose = Select(title="X Axis", options=sorted(attribute_map.keys()), value="Battery Capacity")
 y_axis_choose = Select(title="Y Axis", options=sorted(attribute_map.keys()), value="Price")
-price_slider_filter = Slider(title="maximum price", start=100, end=5000, value=500, step=1)
+price_slider_filter = Slider(title="maximum price", start=100, end=5000, value=5000, step=1)
 screen_size_bounds = RangeSlider(start=0, end=15, value=(0, 15), step=1, title="screen size bounds (inclusive)")
-brand_select = MultiSelect(title="Brands", options= ['ALL'] + smartPhonesDF['brand_name'].unique().tolist(), value= ["ALL"], height = 100, width = 300)
+brand_select = MultiSelect(title="Brands", options= ['ALL'] + smartphonesDF['brand_name'].unique().tolist(), value= ["ALL"], height = 100, width = 300)
 choose_fast_charging = RadioGroup(labels=["No", "Yes", "Any"], active=2)
 
 
 ratingThreshold = 8.0
 #make 2 dataframes the first dataframe for all rows where the rating is less than 8 and another where the rating is greater than 8
-smartphonesDFExcellentRating = smartPhonesDF[smartPhonesDF['avg_rating'] >= ratingThreshold]
-smartphonesDFNormalRating = smartPhonesDF[smartPhonesDF['avg_rating'] < ratingThreshold]
+smartphonesDFExcellentRating = smartphonesDF[smartphonesDF['avg_rating'] >= ratingThreshold]
+smartphonesDFNormalRating = smartphonesDF[smartphonesDF['avg_rating'] < ratingThreshold]
 
 sourceStars = ColumnDataSource(data=dict(
     x=smartphonesDFExcellentRating['battery_capacity'],
@@ -96,10 +93,10 @@ def select_smartphones():
     minimum_screen_size = screen_size_bounds.value[0]
     maximum_screen_size = screen_size_bounds.value[1]
     want_fast_charging = choose_fast_charging.active #0 is no, 1 is yes, 3 doesnt matter
-    selected = smartPhonesDF[
-        (smartPhonesDF['price'] <= max_price)
-        & (smartPhonesDF['screen_size'] >= minimum_screen_size)
-        & (smartPhonesDF['screen_size'] <= maximum_screen_size)
+    selected = smartphonesDF[
+        (smartphonesDF['price'] <= max_price)
+        & (smartphonesDF['screen_size'] >= minimum_screen_size)
+        & (smartphonesDF['screen_size'] <= maximum_screen_size)
     ]
     if(want_fast_charging != 2):
         selected = selected[selected['fast_charging_available'] == want_fast_charging]
@@ -133,14 +130,13 @@ def updateFigure2D():
 
     Figure2D.xaxis.axis_label = x_axis_choose.value
     Figure2D.yaxis.axis_label = y_axis_choose.value
+    Figure2D.y_range.start = 0
+    Figure2D.y_range.end = getMaxValue(y_name)*1.1
+    Figure2D.x_range.start = 0
+    Figure2D.x_range.end = getMaxValue(x_name)*1.1
+
     selected_smartphones = select_smartphones()
     Figure2D.title.text = f"{len(selected_smartphones)} smartphones"
-    """sourceFigure2D.data = dict(
-        x=selected_smartphones[x_name],
-        y=selected_smartphones[y_name],
-        model=selected_smartphones['model'],
-        brand=selected_smartphones['brand_name']
-    )"""
     updateSource(selected_smartphones, x_name, y_name)
 
 
