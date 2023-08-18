@@ -9,10 +9,8 @@ numerical_columns   = smartphonesDF.select_dtypes(include=['int64', 'float64', '
 categorical_columns = smartphonesDF.select_dtypes(include=['object']).columns
 print("categorical columns\n")
 print(categorical_columns.values)
-
 print("numercial columns\n")
 print(numerical_columns.values)
-
 
 #get the maximum and minimum values for each numerical column
 numerical_columns_max_min = {col: (smartphonesDF[col].max(), smartphonesDF[col].min()) for col in numerical_columns}
@@ -23,7 +21,6 @@ def getMaxValue(col):
 def getMinValue(col):
     return numerical_columns_max_min[col][1]
 print(' max price: ', getMaxValue('price'))
-
 
 #get a map where the keys are the categorical columns  excluding the models and the values are the unique values of each categorical column
 categorical_columns_unique_values = {col: smartphonesDF[col].unique() for col in categorical_columns if col != 'model'}

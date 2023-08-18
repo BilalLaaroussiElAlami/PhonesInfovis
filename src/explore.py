@@ -1,7 +1,7 @@
 import pandas as pd
 from bokeh.io import show, curdoc
 from bokeh.layouts import column, row
-from bokeh.models import ColumnDataSource, HoverTool, Select, MultiSelect, Slider, RangeSlider, RadioGroup, Legend
+from bokeh.models import ColumnDataSource, HoverTool, Select, MultiSelect, Slider, RangeSlider, RadioGroup, Legend, Div
 from bokeh.models.ui.dialogs import Button
 from bokeh.plotting import figure
 from bokeh.transform import factor_cmap
@@ -42,6 +42,8 @@ price_slider_filter = Slider(title="maximum price", start=100, end=5000, value=5
 screen_size_bounds = RangeSlider(start=0, end=15, value=(0, 15), step=1, title="screen size bounds (inclusive)")
 brand_select = MultiSelect(title="Brands", options= ['ALL'] + smartphonesDF['brand_name'].unique().tolist(), value= ["ALL"], height = 100, width = 300)
 choose_fast_charging = RadioGroup(labels=["No", "Yes", "Any"], active=2)
+ui_choice_fast_charging = column(Div(text= " <b>Fast charging? </b>"), choose_fast_charging)
+
 
 
 ratingThreshold = 8.0
@@ -145,11 +147,10 @@ controls = [x_axis_choose, y_axis_choose, price_slider_filter, screen_size_bound
 for control in controls:
     control.on_change('value', lambda attr, old, new: updateFigure2D())
 
-selectboxes = [choose_fast_charging]
 choose_fast_charging.on_change('active', lambda attr, old, new: updateFigure2D())
 
 
-controlsExport = controls + selectboxes
+controlsExport = controls + [ui_choice_fast_charging]
 exploreViewModels = column(column(controlsExport), Figure2D, width = 1200)
 
 # Customize the HoverTool to display the model information
