@@ -7,6 +7,12 @@ smartphonesDF['price'] = smartphonesDF['price'] / 100     #convert from cents to
 
 numerical_columns   = smartphonesDF.select_dtypes(include=['int64', 'float64', 'int32', 'float32', 'int', 'float', 'number']).columns
 categorical_columns = smartphonesDF.select_dtypes(include=['object']).columns
+print("categorical columns\n")
+print(categorical_columns.values)
+
+print("numercial columns\n")
+print(numerical_columns.values)
+
 
 #get the maximum and minimum values for each numerical column
 numerical_columns_max_min = {col: (smartphonesDF[col].max(), smartphonesDF[col].min()) for col in numerical_columns}

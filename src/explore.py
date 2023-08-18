@@ -6,7 +6,7 @@ from bokeh.models.ui.dialogs import Button
 from bokeh.plotting import figure
 from bokeh.transform import factor_cmap
 
-from preprocessing import smartphonesDF, getMaxValue
+from preprocessing import smartphonesDF, getMaxValue, numerical_columns
 
 attribute_map = {
     "Brand": "brand_name",
@@ -32,7 +32,8 @@ attribute_map = {
     "Resolution Height": "resolution_height",
     "Resolution Width": "resolution_width",
 }
-
+#filter only numerical values
+attribute_map =  dict(filter(lambda item: item[1] in numerical_columns, attribute_map.items()))
 
 #INTERACTION WIDGETS
 x_axis_choose = Select(title="X Axis", options=sorted(attribute_map.keys()), value="Battery Capacity")
@@ -120,7 +121,7 @@ def updateSource(selection, x_name, y_name):
         y=selectionNormalRating[y_name],
         model=selectionNormalRating['model'],
         brand=selectionNormalRating['brand_name'],
-        rating = selectionNormalRating['avg_rating']
+        rating=selectionNormalRating['avg_rating']
     )
 
 def updateFigure2D():
