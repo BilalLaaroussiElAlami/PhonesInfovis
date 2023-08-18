@@ -11,7 +11,6 @@ from legend import legendDiv
 
 attribute_map = {
     "Brand": "brand_name",
-    "Model": "model",
     "Price": "price",
     "Average Rating": "avg_rating",
     "5G Support": "5G_or_not",
@@ -25,7 +24,6 @@ attribute_map = {
     "Screen Size": "screen_size",
     "Refresh Rate": "refresh_rate",
     "Number of Rear Cameras": "num_rear_cameras",
-    "Operating System": "os",
     "Primary Rear Camera Quality": "primary_camera_rear",
     "Primary Front Camera Quality": "primary_camera_front",
     "Extended Memory Available": "extended_memory_available",
@@ -102,7 +100,6 @@ def select_smartphones():
         selected = selected[selected['extended_memory_available'] == want_extended_memory_available]
     if(want_5G_or_not != 2):
         selected = selected[selected['5G_or_not'] == want_5G_or_not]
-
     if('ALL' not in brand_select.value):
         selected = selected[selected['brand_name'].isin(brand_select.value)]
     return selected
@@ -140,7 +137,6 @@ def updateFigure2D():
     Figure2D.title.text = f"{len(selected_smartphones)} smartphones"
     updateSource(selected_smartphones, x_name, y_name)
 
-
 controls = [x_axis_choose, y_axis_choose, price_slider_filter, screen_size_bounds, brand_select]
 for control in controls:
     control.on_change('value', lambda attr, old, new: updateFigure2D())
@@ -149,11 +145,9 @@ choose_fast_charging.on_change('active', lambda attr, old, new: updateFigure2D()
 choose_extended_memory_available.on_change('active', lambda attr, old, new: updateFigure2D())
 choose_5G_or_not.on_change('active', lambda attr, old, new: updateFigure2D())
 
-
 controlsExport = controls + [row(ui_choice_fast_charging, ui_choice_extended_memory, ui_choice_5G_or_not)]
-exploreViewModels = row(column(controlsExport), Figure2D, legendDiv, width = 1000)
+exploreViewModels = row(column(controlsExport), Figure2D, legendDiv, width = 1010)
 
-# Customize the HoverTool to display the model information
 hover = HoverTool()
 hover.tooltips = [("Model", "@model"), ("Rating", "@rating")]
 Figure2D.add_tools(hover)
