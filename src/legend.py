@@ -10,7 +10,7 @@ html_code = """
 <style>
   .legend {
     font-family: Arial, sans-serif;
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .legend-item {
@@ -39,11 +39,11 @@ html_code = """
   <div class="legend">
     <div class="legend-item">
       <div class="color-box circle" style = "background-color: gray;"  ></div>
-      <span>Smartphone</span>
+      <span>smartphone</span>
     </div>
     <div class="legend-item">
       <div class="color-box" style = "background-color: gray;" ></div>
-      <span>Excellent Rating</span>
+      <span>excellent</span>
     </div>
     <div class="legend-item">
       <div class="color-box circle" style="background-color: orange"></div>
@@ -70,5 +70,4 @@ html_code = """
 # Add a Div widget with the HTML code
 legendDiv = Div(text=html_code)
 
-show(legendDiv)
 
