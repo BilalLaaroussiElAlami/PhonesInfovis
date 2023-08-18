@@ -12,27 +12,22 @@ html_code = """
     font-family: Arial, sans-serif;
     font-size: 12px;
   }
-
   .legend-item {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
   }
-
   .circle {
     border-radius: 45%;
   }
-
   .square {
     border-radius: 5px;
   }
-
   .color-box {
     width: 20px;
     height: 20px;
     margin-right: 5px;
   }
-
 </style>
 </head>
 <body>
@@ -60,9 +55,15 @@ html_code = """
     <div class="legend-item">
         <div class="color-box circle" style="background-color: purple"></div>
         <span>Oppo</span>
-      </div>
-
-  </div>
+    </div>
+    <div class="legend-item">
+        <div class="color-box circle" style="background-color: red"></div>
+        <span>vivo</span>
+    </div>
+    <div class="legend-item">
+        <div class="color-box circle" style="background-color: gray"></div>
+        <span>other</span>
+    </div>
 </body>
 </html>
 """
