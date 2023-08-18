@@ -5,7 +5,24 @@ import pandas as pd
 
 
 
+#get the maximum values of each attribute of smartphones.csv associated with
+def getMaxVals():
+    df = pd.read_csv('smartphones.csv')
+    #divide 'price' bu 100
+    df['price'] = df['price']/100
+    df = df.select_dtypes(include=['int64', 'float64', 'int32', 'float32', 'int', 'float', 'number'])
+    maxVals = df.max()
+    return maxVals
+
+maxvals = getMaxVals()
+print(maxvals['battery_capacity'])
+
 def radarplots(valsA,nameA,valsB,nameB, labels):
+    #normalize valsA and valsB
+
+    valsA = [x/maxvals[labels[i]] for i,x in enumerate(valsA)]
+    valsB = [x/maxvals[labels[i]] for i,x in enumerate(valsB)]
+
     df1 = pd.DataFrame(dict(
         r=valsA,
         theta=labels))
@@ -25,31 +42,11 @@ def radarplots(valsA,nameA,valsB,nameB, labels):
 
 
 #example usage of function radarplots
-X =  radarplots([0.2, 0.8, 0.4, 0.3, 1], "YUU", [0.5, 0.6, 0.9, 0.7, 0.5], "YUUKES", ['Difficulty', 'Execution', 'Landing','Style', 'Creativity'])
+X =  radarplots([100, 5.8, 4], "YUU", [300, 6.6, 3], "YUUKES", ['price', 'avg_rating', 'num_cores'])
 X.show()
-"""
-# Create multiple dataframes with different data
-df1 = pd.DataFrame(dict(
-    r=[0.2, 0.8, 0.4, 0.3, 1],
-    theta=['Difficulty', 'Execution', 'Landing',
-           'Style', 'Creativity']))
 
-df2 = pd.DataFrame(dict(
-    r=[0.5, 0.6, 0.9, 0.7, 0.5],
-    theta=['Difficulty', 'Execution', 'Landing',
-           'Style', 'Creativity']))
-
-# Create a figure and add multiple polar line traces
-fig = px.line_polar(df1, r='r', theta='theta', line_close=True)
-fig.update_traces(fill='toself', name='Dataset 1')
-
-fig.add_trace(
-    px.line_polar(df2, r='r', theta='theta', line_close=True)
-    .update_traces(fill='toself', name='Dataset 2')
-    .data[0]
-)
-
-# You can add more traces similarly for more datasets
-
-fig.show()
-"""
+#get the maximum avg_rating of smartphones.csv
+df = pd.read_csv('smartphones.csv')
+df = df.select_dtypes(include=['int64', 'float64', 'int32', 'float32', 'int', 'float', 'number'])
+maxAvgRating = df['avg_rating'].max()
+print(maxAvgRating)
