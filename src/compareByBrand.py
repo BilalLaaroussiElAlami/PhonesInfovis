@@ -66,7 +66,7 @@ def multi_select_callback(attr, old, new):
     if(len(user_selected_attributes) > 1):
         new_barcharts = list(map(lambda attribute: create_barchart(user_selected_models, attribute), user_selected_attributes))
         update_barcharts(layout, new_barcharts)
-    #update_data_table(layout, create_data_table(user_selected_models, user_selected_attributes))
+    update_data_table(layout, create_data_table(user_selected_models, user_selected_attributes))
 
 def update_barchart(llayout, nnewbarchart):
     compareViewBrand.children[1] = nnewbarchart

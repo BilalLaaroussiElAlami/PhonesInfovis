@@ -4,6 +4,7 @@ from bokeh.models import ColumnDataSource, HoverTool, Select, MultiSelect, Slide
 from bokeh.plotting import figure
 from bokeh.transform import factor_cmap
 
+from preprocessing import getMaxValue
 
 # maka a dataframe from the csv file
 smartPhonesDF = pd.read_csv('smartphones.csv')
@@ -35,7 +36,7 @@ attribute_map = {
     "Resolution Height": "resolution_height",
     "Resolution Width": "resolution_width",
 }
-
+attribute_map =  dict(filter(lambda item: item[1] in numerical_columns, attribute_map.items()))
 
 #INTERACTION WIDGETS
 x_axis_choose = Select(title="X Axis", options=sorted(attribute_map.keys()), value="Battery Capacity")
@@ -112,12 +113,10 @@ def updateFigure2D():
     Figure2D.yaxis.axis_label = y_axis_choose.value
     selected_smartphones = select_smartphones()
     Figure2D.title.text = f"{len(selected_smartphones)} smartphones"
-    """sourceFigure2D.data = dict(
-        x=selected_smartphones[x_name],
-        y=selected_smartphones[y_name],
-        model=selected_smartphones['model'],
-        brand=selected_smartphones['brand_name']
-    )"""
+    Figure2D.y_range.start = 0
+    Figure2D.y_range.end = getMaxValue(y_name) * 1.1
+    Figure2D.x_range.start = 0
+    Figure2D.x_range.end = getMaxValue(x_name) * 1.1
     updateSource(selected_smartphones, x_name, y_name)
 
 def updateSource(selection, x_name, y_name):
