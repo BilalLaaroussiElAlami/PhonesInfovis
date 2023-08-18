@@ -5,6 +5,7 @@ from bokeh.layouts import column, row
 from bokeh.models import MultiSelect, ColumnDataSource, Div
 from bokeh.plotting import figure
 
+from radarChart import create_radar_plot
 
 df = pd.read_csv('smartphones.csv')
 
@@ -15,11 +16,12 @@ initial_attribute = 'price'
 initial_models = ['Apple iPhone 11', 'Apple iPhone 14', 'Google Pixel 2 XL', 'Samsung Galaxy S23 Plus']
 
 def get_value_attribute(model, attribute):
-    print("🤔  model: ", model, " attribute: ", attribute)
     return df.loc[df['model'] == model, attribute].values[0]
-
 def get_values_multiple_models_one_attribute(models, attribute):
     return list(map(lambda model: get_value_attribute(model, attribute), models))
+def get_values_multiple_attributes_one_model(model, attributes):
+    return list(map(lambda attribute: get_value_attribute(model, attribute), attributes))
+
 
 def create_barchart(models,attribute):
     source = ColumnDataSource(
@@ -47,7 +49,6 @@ def create_data_table(models, attributes):
             html += f'<td> {row[attr]}</td>'
         html += '</tr>'
     html += '</table>'
-    print(html)
     return Div(text = html)
 
 datatable = create_data_table(initial_models, [initial_attribute])
@@ -56,7 +57,6 @@ barchart = create_barchart(initial_models, initial_attribute)
 # will be called when selectinf models or attributes to see/compare
 def multi_select_callback(attr, old, new):
     user_selected_models = multi_select_models.value
-    print("🙏  user_selected_models", user_selected_models)
     user_selected_attributes = multi_select_attributes.value
     user_selected_attribute = multi_select_attributes.value[0]
     new_barchart = create_barchart(user_selected_models, user_selected_attribute)
@@ -65,6 +65,14 @@ def multi_select_callback(attr, old, new):
         new_barcharts = list(map(lambda attribute: create_barchart(user_selected_models, attribute), user_selected_attributes))
         update_barcharts(layout, new_barcharts)
     update_data_table(layout, create_data_table(user_selected_models, user_selected_attributes))
+    if(len(user_selected_models) == 2 and len(user_selected_attributes) > 2):
+        print( " ✅ ")
+        radarPlot = create_radar_plot(
+            get_values_multiple_attributes_one_model( multi_select_models.value[0], user_selected_attributes),  multi_select_models.value[0],
+            get_values_multiple_attributes_one_model(multi_select_models.value[1], user_selected_attributes),  multi_select_models.value[1],
+            user_selected_attributes)
+        update_radarplot(layout, radarPlot)
+
 
 def update_barchart(llayout, nnewbarchart):
     compareViewModels.children[1] = nnewbarchart
@@ -79,6 +87,10 @@ def update_data_table(llayout, data_table):
     compareViewModels.children[0].children[1] = data_table
     llayout.children[1].children[1] = compareViewModels
 
+def update_radarplot(llayout, radarplot):
+    compareViewModels.children[0].children[2] = radarplot
+    llayout.children[1].children[1] = compareViewModels
+
 #INTERACTION WIDGETS
 optionsModels = df['model'].unique().tolist()
 multi_select_models = MultiSelect(title="select model(s)::", value=["Apple iPhone 11"], options=optionsModels,
@@ -91,7 +103,7 @@ multi_select_attributes = MultiSelect(title="Select attributes:", value=["price"
                                       height=200)
 multi_select_attributes.on_change('value', multi_select_callback)
 
-compareViewModels = column(column(row(multi_select_models, multi_select_attributes), datatable), barchart, width = 1200)
+compareViewModels = column(column(row(multi_select_models, multi_select_attributes), datatable, Div()), barchart, width = 1200)
 
 layout = None
 

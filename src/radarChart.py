@@ -17,9 +17,8 @@ def getMaxVals():
 maxvals = getMaxVals()
 print(maxvals['battery_capacity'])
 
-def radarplots(valsA,nameA,valsB,nameB, labels):
+def create_radar_plot(valsA, nameA, valsB, nameB, labels):
     #normalize valsA and valsB
-
     valsA = [x/maxvals[labels[i]] for i,x in enumerate(valsA)]
     valsB = [x/maxvals[labels[i]] for i,x in enumerate(valsB)]
 
@@ -41,8 +40,10 @@ def radarplots(valsA,nameA,valsB,nameB, labels):
     return fig
 
 
+
+
 #example usage of function radarplots
-X =  radarplots([100, 5.8, 4], "YUU", [300, 6.6, 3], "YUUKES", ['price', 'avg_rating', 'num_cores'])
+X =  create_radar_plot([100, 5.8, 4], "YUU", [300, 6.6, 3], "YUUKES", ['price', 'avg_rating', 'num_cores'])
 X.show()
 
 #get the maximum avg_rating of smartphones.csv

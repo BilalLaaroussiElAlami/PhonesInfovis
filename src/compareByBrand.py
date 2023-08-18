@@ -18,7 +18,6 @@ initial_brands = ['apple', 'samsung', 'huawei']
 
 
 def get_value_attribute(brand, attribute):
-    print("🤔  brand:", brand ," attribute:",attribute)
     return smartphones_brand_averages_df.loc[smartphones_brand_averages_df['brand_name'] == brand, attribute].values[0]
 
 def get_values_multiple_brands_one_attribute(brands, attribute):
@@ -52,8 +51,6 @@ def create_data_table(brands, attributes):
             html += f'<td> {row[attr]}</td>'
         html += '</tr>'
     html += '</table>'
-    print("html brandddddd 😝: ")
-    print(html)
     return Div(text = html)
 
 data_table = create_data_table(initial_brands, [initial_attribute])
@@ -62,7 +59,6 @@ data_table = create_data_table(initial_brands, [initial_attribute])
 
 def multi_select_callback(attr, old, new):
     user_selected_models = multi_select_models.value
-    print("🙏  user_selected_models", user_selected_models)
     user_selected_attributes = multi_select_attributes.value
     user_selected_attribute = multi_select_attributes.value[0]
     new_barchart = create_barchart(user_selected_models, user_selected_attribute)
